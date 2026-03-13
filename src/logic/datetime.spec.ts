@@ -1,5 +1,6 @@
 import type {JSONObject} from '@open-formulieren/types';
 
+import {TYPE} from './extensions/constants';
 import evaluate from './index';
 
 test.each([
@@ -150,9 +151,10 @@ test('subtraction of datetimes produces a delta', () => {
     '-': [{datetime: '2026-03-11T18:30:00+01:00'}, {datetime: '2026-03-11T18:00:00+01:00'}],
   };
 
-  const result = evaluate(expression, {});
+  const result = evaluate(expression, {}, {serializeResult: false});
 
   expect(result).toEqual({
+    [TYPE]: 'relativedelta',
     years: 0,
     months: 0,
     days: 0,
@@ -167,9 +169,10 @@ test('subtraction of datetimes translates weeks into days', () => {
     '-': [{datetime: '2026-03-18T18:00:00+01:00'}, {datetime: '2026-03-11T18:00:00+01:00'}],
   };
 
-  const result = evaluate(expression, {});
+  const result = evaluate(expression, {}, {serializeResult: false});
 
   expect(result).toEqual({
+    [TYPE]: 'relativedelta',
     years: 0,
     months: 0,
     days: 7,

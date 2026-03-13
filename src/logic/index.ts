@@ -12,6 +12,7 @@
  * The core engine is extended with the Open Forms-specific backend extensions.
  */
 import type {JSONValue} from '@open-formulieren/types';
+import {formatISODuration} from 'date-fns';
 import {LogicEngine} from 'json-logic-engine';
 
 import {
@@ -28,12 +29,15 @@ import {
   customStrictEquals,
   customSubtraction,
   jsonLogicDateTime,
+  jsonLogicDuration,
   jsonLogicRelativeDelta,
 } from './extensions';
+import {TYPE} from './extensions/constants';
 
 const engine = new LogicEngine();
 engine.addMethod('datetime', jsonLogicDateTime, {deterministic: true});
 engine.addMethod('rdelta', jsonLogicRelativeDelta, {deterministic: true});
+engine.addMethod('duration', jsonLogicDuration, {deterministic: true});
 
 // overrides to handle our own data types
 // reference of logic builtins: https://json-logic.github.io/json-logic-engine/docs/logic
@@ -116,7 +120,12 @@ const serialize = (value: unknown): JSONValue => {
 
   // otherwise do a roundtrip to JSON serialize and parse it - builtins have a toJSON
   // method that gets called in this process
-  const serializedJsonString = JSON.stringify(value);
+  const serializedJsonString = JSON.stringify(value, (_, value) => {
+    if (typeof value === 'object' && TYPE in value && value[TYPE] === 'relativedelta') {
+      return formatISODuration(value);
+    }
+    return value;
+  });
   return JSON.parse(serializedJsonString);
 };
 
