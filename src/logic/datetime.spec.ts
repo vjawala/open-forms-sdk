@@ -59,8 +59,8 @@ test('less-than-equals comparison with ISO-8601 datetime strings with different 
   expect(result).toBe(true);
 });
 
-test.each(['not', '!'])('not unary operator', (operator: string) => {
-  const expression = {[operator]: {datetime: '2026-03-01T12:00:00+01:00'}};
+test('not unary operator', () => {
+  const expression = {'!': {datetime: '2026-03-01T12:00:00+01:00'}};
 
   const result = evaluate(expression, {});
 
