@@ -35,10 +35,10 @@ jobs:
     needs: setup
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: npm
@@ -71,10 +71,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: npm
@@ -108,10 +108,10 @@ jobs:
             script: lint
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: npm
@@ -127,7 +127,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: open-formulieren/actions/check-message-extraction@v1
         with:
           paths: src/i18n/{compiled,messages}
@@ -161,10 +161,10 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: npm
@@ -205,7 +205,7 @@ jobs:
 
     steps:
       # This will include the updated OAS (if updated) from the update-oas job.
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
