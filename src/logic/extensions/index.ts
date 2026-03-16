@@ -8,6 +8,7 @@ export {
   customNotEquals,
   customNotStrictEquals,
 } from './comparators';
+export {jsonLogicDate} from './date';
 export {jsonLogicDateTime} from './datetime';
 export {jsonLogicDuration} from './duration';
 export {customAddition, customSubtraction, customMaximum, customMinimum} from './math';

@@ -28,6 +28,7 @@ import {
   customNotStrictEquals,
   customStrictEquals,
   customSubtraction,
+  jsonLogicDate,
   jsonLogicDateTime,
   jsonLogicDuration,
   jsonLogicRelativeDelta,
@@ -35,6 +36,7 @@ import {
 import {TYPE} from './extensions/constants';
 
 const engine = new LogicEngine();
+engine.addMethod('date', jsonLogicDate, {deterministic: true});
 engine.addMethod('datetime', jsonLogicDateTime, {deterministic: true});
 engine.addMethod('rdelta', jsonLogicRelativeDelta, {deterministic: true});
 engine.addMethod('duration', jsonLogicDuration, {deterministic: true});

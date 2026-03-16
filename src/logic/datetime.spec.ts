@@ -182,7 +182,7 @@ test('subtraction of datetimes translates weeks into days', () => {
   });
 });
 
-// technically you could mix date types here with regular numbers mixin in, but that
+// technically you could mix date types here with regular numbers mixed in, but that
 // doesn't make sense semantically so we ignore the case - the responsibility is still
 // on the form designers to write logic rules that make sense
 test('maximum of datetimes', () => {
