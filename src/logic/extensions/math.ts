@@ -13,6 +13,9 @@ import type {JsonLogicEngineMethod} from './types';
 export const customAddition: JsonLogicEngineMethod = args => {
   const original = defaultMethods['+'];
 
+  // if any null-ish value is in the args, shortcut to match backend behaviour
+  if (args.some(arg => arg == null)) return null;
+
   // check for any rdeltas - if there are some, there are two modes:
   // - no dates present, sum all the rdeltas into one (matching the
   //   dateutil.relativedelta behaviour in python)
@@ -50,6 +53,9 @@ export const customAddition: JsonLogicEngineMethod = args => {
  */
 export const customSubtraction: JsonLogicEngineMethod = args => {
   const original = defaultMethods['-'];
+
+  // if any null-ish value is in the args, shortcut to match backend behaviour
+  if (args.some(arg => arg == null)) return null;
 
   // check for any rdeltas - if there are some, there are two modes:
   // - no dates present, sum all the rdeltas into one (matching the
@@ -104,8 +110,11 @@ export const customSubtraction: JsonLogicEngineMethod = args => {
 
 const customMinMaxFactory = (
   original: JsonLogicEngineMethod<number>
-): JsonLogicEngineMethod<number | Date> => {
+): JsonLogicEngineMethod<number | Date | null> => {
   return (args: unknown[]) => {
+    // if any null-ish value is in the args, shortcut to match backend behaviour
+    if (args.some(arg => arg == null)) return null;
+
     // if there are dates, convert them into something comparable, call the original and
     // map back to the date instance
     const dates = args.filter(arg => arg instanceof Date);
@@ -132,3 +141,30 @@ const customMinMaxFactory = (
 
 export const customMaximum = customMinMaxFactory(defaultMethods['max']);
 export const customMinimum = customMinMaxFactory(defaultMethods['min']);
+
+export const customModulo: JsonLogicEngineMethod = args => {
+  const original = defaultMethods['%'];
+
+  // if any null-ish value is in the args, shortcut to match backend behaviour
+  if (args.some(arg => arg == null)) return null;
+
+  return original(args);
+};
+
+export const customMultiplication: JsonLogicEngineMethod = args => {
+  const original = defaultMethods['*'];
+
+  // if any null-ish value is in the args, shortcut to match backend behaviour
+  if (args.some(arg => arg == null)) return null;
+
+  return original(args);
+};
+
+export const customDivision: JsonLogicEngineMethod = args => {
+  const original = defaultMethods['/'];
+
+  // if any null-ish value is in the args, shortcut to match backend behaviour
+  if (args.some(arg => arg == null)) return null;
+
+  return original(args);
+};

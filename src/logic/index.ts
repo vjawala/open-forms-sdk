@@ -17,6 +17,7 @@ import {LogicEngine} from 'json-logic-engine';
 
 import {
   customAddition,
+  customDivision,
   customEquals,
   customGreaterThan,
   customGreaterThanEquals,
@@ -24,6 +25,8 @@ import {
   customLessThanEquals,
   customMaximum,
   customMinimum,
+  customModulo,
+  customMultiplication,
   customNotEquals,
   customNotStrictEquals,
   customStrictEquals,
@@ -55,6 +58,9 @@ engine.addMethod('!==', customNotStrictEquals);
 // reference of math builtins: https://json-logic.github.io/json-logic-engine/docs/math
 engine.addMethod('+', customAddition);
 engine.addMethod('-', customSubtraction);
+engine.addMethod('*', customMultiplication);
+engine.addMethod('/', customDivision);
+engine.addMethod('%', customModulo);
 engine.addMethod('max', customMaximum);
 engine.addMethod('min', customMinimum);
 // overrides to match backend behaviour

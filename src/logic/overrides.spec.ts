@@ -16,3 +16,17 @@ test.each([null, undefined])(
     expect(result).toBe(1);
   }
 );
+
+test.each([
+  [{'+': [null, 5]}],
+  [{'-': [null, 5]}],
+  [{'*': [null, 5]}],
+  [{'/': [null, 5]}],
+  [{'%': [null, 5]}],
+  [{min: [null, 5]}],
+  [{max: [null, 5]}],
+])('math with null-ish values short-circuits, expression: %o', (expression: JSONObject) => {
+  const result = evaluate(expression, {});
+
+  expect(result).toBe(null);
+});
