@@ -28,6 +28,7 @@ import {
   customNotStrictEquals,
   customStrictEquals,
   customSubtraction,
+  customVar,
   jsonLogicDate,
   jsonLogicDateTime,
   jsonLogicDuration,
@@ -56,6 +57,8 @@ engine.addMethod('+', customAddition);
 engine.addMethod('-', customSubtraction);
 engine.addMethod('max', customMaximum);
 engine.addMethod('min', customMinimum);
+// overrides to match backend behaviour
+engine.addMethod('var', customVar);
 
 // remove methods that are either syntactic sugar or extensions from json-logic-js, to
 // prevent people accidentally using them while we don't support them in the backend.
