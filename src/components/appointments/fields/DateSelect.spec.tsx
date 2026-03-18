@@ -71,8 +71,8 @@ describe('The appointment date select', () => {
     expect(screen.getByRole('button', {name: 'Wednesday 14 June 2023'})).not.toBeDisabled();
     expect(screen.getByRole('button', {name: 'Thursday 15 June 2023'})).not.toBeDisabled();
     expect(screen.getByRole('button', {name: 'Friday 16 June 2023'})).not.toBeDisabled();
-    expect(screen.getByRole('button', {name: 'Saturday 17 June 2023'})).not.toBeDisabled();
-    expect(screen.getByRole('button', {name: 'Sunday 18 June 2023'})).toBeDisabled();
+    expect(screen.queryByRole('button', {name: 'Saturday 17 June 2023'})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Sunday 18 June 2023'})).not.toBeInTheDocument();
   });
 
   it('disables missing dates within the available dates range', async () => {
@@ -100,7 +100,7 @@ describe('The appointment date select', () => {
     expect(screen.getByRole('button', {name: 'Wednesday 14 June 2023'})).toBeDisabled();
     expect(screen.getByRole('button', {name: 'Thursday 15 June 2023'})).not.toBeDisabled();
     expect(screen.getByRole('button', {name: 'Friday 16 June 2023'})).not.toBeDisabled();
-    expect(screen.getByRole('button', {name: 'Saturday 17 June 2023'})).not.toBeDisabled();
-    expect(screen.getByRole('button', {name: 'Sunday 18 June 2023'})).toBeDisabled();
+    expect(screen.queryByRole('button', {name: 'Saturday 17 June 2023'})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Sunday 18 June 2023'})).not.toBeInTheDocument();
   });
 });
