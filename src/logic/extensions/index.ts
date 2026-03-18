@@ -22,3 +22,4 @@ export {
   customSubtraction,
 } from './math';
 export {jsonLogicRelativeDelta} from './rdelta';
+export {jsonLogicToday} from './today';

@@ -36,6 +36,7 @@ import {
   jsonLogicDateTime,
   jsonLogicDuration,
   jsonLogicRelativeDelta,
+  jsonLogicToday,
 } from './extensions';
 import {TYPE} from './extensions/constants';
 
@@ -44,6 +45,7 @@ engine.addMethod('date', jsonLogicDate, {deterministic: true});
 engine.addMethod('datetime', jsonLogicDateTime, {deterministic: true});
 engine.addMethod('rdelta', jsonLogicRelativeDelta, {deterministic: true});
 engine.addMethod('duration', jsonLogicDuration, {deterministic: true});
+engine.addMethod('today', jsonLogicToday, {deterministic: false});
 
 // overrides to handle our own data types
 // reference of logic builtins: https://json-logic.github.io/json-logic-engine/docs/logic

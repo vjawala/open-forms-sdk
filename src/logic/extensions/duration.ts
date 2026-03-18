@@ -2,6 +2,7 @@ import {parse} from 'tinyduration';
 
 import {INVALID_ARGUMENTS, TYPE} from './constants';
 import type {RelativeDelta} from './rdelta';
+import {isRelativeDelta} from './rdelta';
 import type {JsonLogicEngineMethod} from './types';
 
 /**
@@ -11,7 +12,11 @@ import type {JsonLogicEngineMethod} from './types';
  * how operations involving it must behave.
  */
 export const jsonLogicDuration: JsonLogicEngineMethod = (args): RelativeDelta => {
-  if (args.length !== 1 || typeof args[0] !== 'string') throw INVALID_ARGUMENTS;
+  if (args.length !== 1) throw INVALID_ARGUMENTS;
+  const arg = args[0];
+  // if it's already a relativedelta, pass it through
+  if (isRelativeDelta(arg)) return arg;
+  if (typeof arg !== 'string') throw INVALID_ARGUMENTS;
   const {
     years = 0,
     months = 0,
@@ -20,7 +25,7 @@ export const jsonLogicDuration: JsonLogicEngineMethod = (args): RelativeDelta =>
     hours = 0,
     minutes = 0,
     seconds = 0,
-  } = parse(args[0]);
+  } = parse(arg);
   return {
     [TYPE]: 'relativedelta',
     years,

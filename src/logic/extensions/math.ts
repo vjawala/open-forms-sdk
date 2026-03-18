@@ -1,4 +1,4 @@
-import {utc} from '@date-fns/utc';
+import {tz} from '@date-fns/tz';
 import {add, intervalToDuration, sub} from 'date-fns';
 import type {AddOptions, SubOptions} from 'date-fns';
 import {defaultMethods} from 'json-logic-engine';
@@ -8,6 +8,8 @@ import {DateWithoutTime} from './date';
 import {isRelativeDelta, subtractDeltas, sumDeltas} from './rdelta';
 import type {RelativeDelta} from './rdelta';
 import type {JsonLogicEngineMethod} from './types';
+
+const UTC = tz('UTC');
 
 /**
  * Custom addition implementation handles our custom data types introduced with the
@@ -45,7 +47,7 @@ export const customAddition: JsonLogicEngineMethod = args => {
     // at midnight UTC.
     const startDate = dates[0];
     const asDateWithoutTime = startDate instanceof DateWithoutTime;
-    const deltaOptions: AddOptions | undefined = asDateWithoutTime ? {in: utc} : undefined;
+    const deltaOptions: AddOptions | undefined = asDateWithoutTime ? {in: UTC} : undefined;
     // rdeltas combined with dates are not commutative, so we must preserve the order.
     // however, we do have to extract the date instance to the start and build from
     // there.
@@ -94,7 +96,7 @@ export const customSubtraction: JsonLogicEngineMethod = args => {
     // at midnight UTC.
     const startDate = args[0];
     const asDateWithoutTime = startDate instanceof DateWithoutTime;
-    const deltaOptions: SubOptions | undefined = asDateWithoutTime ? {in: utc} : undefined;
+    const deltaOptions: SubOptions | undefined = asDateWithoutTime ? {in: UTC} : undefined;
     // subtract all the provided rdeltas from the date
     const result = rdeltas.reduce((acc, rdelta) => sub(acc, rdelta, deltaOptions), startDate);
     return asDateWithoutTime ? DateWithoutTime.createFrom(result) : result;
