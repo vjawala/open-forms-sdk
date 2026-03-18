@@ -21,7 +21,8 @@
     "skipLibCheck": true,
     "paths": {
       "@/*": ["./*"],
-      "@/sb-decorators": ["../.storybook/decorators.tsx"]
+      "@/sb-decorators": ["../.storybook/decorators.tsx"],
+      "date-fns": ["../node_modules/date-fns"]
     },
     "types": [
       "vite/client",

@@ -1,7 +1,10 @@
+import {utc} from '@date-fns/utc';
 import {add, intervalToDuration, sub} from 'date-fns';
+import type {AddOptions, SubOptions} from 'date-fns';
 import {defaultMethods} from 'json-logic-engine';
 
 import {INVALID_ARGUMENTS, TYPE} from './constants';
+import {DateWithoutTime} from './date';
 import {isRelativeDelta, subtractDeltas, sumDeltas} from './rdelta';
 import type {RelativeDelta} from './rdelta';
 import type {JsonLogicEngineMethod} from './types';
@@ -35,10 +38,19 @@ export const customAddition: JsonLogicEngineMethod = args => {
     // sense.
     if (args.length !== rdeltas.length + 1) throw INVALID_ARGUMENTS;
 
+    // if we have a datetime (normal Date object), calculate everything in a timezone-
+    // aware fashion, but if we're dealing with a date (discard time information),
+    // calculate everything in UTC so that we avoid daylight-savings-time related
+    // issues. The `date` operator already takes care of initializing the Date instances
+    // at midnight UTC.
+    const startDate = dates[0];
+    const asDateWithoutTime = startDate instanceof DateWithoutTime;
+    const deltaOptions: AddOptions | undefined = asDateWithoutTime ? {in: utc} : undefined;
     // rdeltas combined with dates are not commutative, so we must preserve the order.
     // however, we do have to extract the date instance to the start and build from
     // there.
-    return rdeltas.reduce((acc, rdelta) => add(acc, rdelta), dates[0]);
+    const result = rdeltas.reduce((acc, rdelta) => add(acc, rdelta, deltaOptions), startDate);
+    return asDateWithoutTime ? DateWithoutTime.createFrom(result) : result;
   }
 
   // if there are multiple dates, we can't do anything meaningful
@@ -75,8 +87,17 @@ export const customSubtraction: JsonLogicEngineMethod = args => {
     // supported
     if (!(args[0] instanceof Date)) throw INVALID_ARGUMENTS;
 
+    // if we have a datetime (normal Date object), calculate everything in a timezone-
+    // aware fashion, but if we're dealing with a date (discard time information),
+    // calculate everything in UTC so that we avoid daylight-savings-time related
+    // issues. The `date` operator already takes care of initializing the Date instances
+    // at midnight UTC.
+    const startDate = args[0];
+    const asDateWithoutTime = startDate instanceof DateWithoutTime;
+    const deltaOptions: SubOptions | undefined = asDateWithoutTime ? {in: utc} : undefined;
     // subtract all the provided rdeltas from the date
-    return rdeltas.reduce((acc, rdelta) => sub(acc, rdelta), args[0]);
+    const result = rdeltas.reduce((acc, rdelta) => sub(acc, rdelta, deltaOptions), startDate);
+    return asDateWithoutTime ? DateWithoutTime.createFrom(result) : result;
   }
 
   // subtracting dates produces a relativedelta, but only if we have exactly two dates
