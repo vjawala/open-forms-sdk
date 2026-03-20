@@ -72,6 +72,7 @@ export const FORM_DEFAULTS = {
   submissionReportDownloadLinkTitle: '',
   newRendererEnabled: false,
   communicationPreferencesPortalUrl: '',
+  newLogicEvaluationEnabled: false,
 } satisfies Form;
 
 /**

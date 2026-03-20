@@ -285,7 +285,10 @@ const FormStep = () => {
       type: 'STEP_LOADED',
       payload: stepDetail,
     });
-    configurationRef.current = stepDetail.formStep.configuration;
+    // 3.5.0+ exposes `configuration` at the top level
+    // TODO: remove fallback once https://github.com/open-formulieren/open-forms/pull/6096
+    // is merged.
+    configurationRef.current = stepDetail.configuration ?? stepDetail.formStep.configuration;
     window.scrollTo(0, 0, {behavior: 'smooth'});
   }, [submissionStep.url]);
 
@@ -424,7 +427,10 @@ const FormStep = () => {
       // definition by using the ref to the underlying Formio instance.
       // NOTE that this does effectively bring our state.configuration out of sync
       // with the actual form configuration (!).
-      const newConfiguration = step.formStep.configuration;
+      // 3.5.0+ exposes `configuration` at the top level
+      // TODO: remove fallback once https://github.com/open-formulieren/open-forms/pull/6096
+      // is merged.
+      const newConfiguration = step.configuration ?? step.formStep.configuration;
       const previousConfiguration = configurationRef.current;
       const configurationChanged =
         previousConfiguration && !isEqual(previousConfiguration, newConfiguration);
