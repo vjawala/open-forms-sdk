@@ -1,6 +1,7 @@
 import type {AnyComponentSchema, JSONObject} from '@open-formulieren/types';
 import {HttpResponse, http} from 'msw';
 
+import type {FormioConfiguration} from '@/data/formio';
 import type {SubmissionStep} from '@/data/submission-steps';
 import type {Submission} from '@/data/submissions';
 import type {InvalidParam} from '@/errors';
@@ -20,6 +21,7 @@ const SUBMISSION_DETAILS = {
       name: 'Step 1',
       url: `${BASE_URL}submissions/458b29ae-5baa-4132-a0d7-8c7071b8152a/steps/9e6eb3c5-e5a4-4abf-b64a-73d3243f2bf5`,
       formStep: `${BASE_URL}forms/mock/steps/9e6eb3c5-e5a4-4abf-b64a-73d3243f2bf5`,
+      defaultIsApplicable: true,
       isApplicable: true,
       completed: false,
       canSubmit: true,
@@ -29,6 +31,7 @@ const SUBMISSION_DETAILS = {
       name: 'Step 2',
       url: `${BASE_URL}submissions/458b29ae-5baa-4132-a0d7-8c7071b8152a/steps/98980oi8-e5a4-4abf-b64a-76j3j3ki897`,
       formStep: `${BASE_URL}forms/mock/steps/98980oi8-e5a4-4abf-b64a-76j3j3ki897`,
+      defaultIsApplicable: true,
       isApplicable: false,
       completed: false,
       canSubmit: false,
@@ -43,23 +46,32 @@ const SUBMISSION_DETAILS = {
   },
 } satisfies Submission;
 
+const DEFAULT_FORMIO_CONFIGURATION: FormioConfiguration = {
+  type: 'form',
+  components: [
+    {
+      id: 'asdiwj',
+      type: 'textfield',
+      key: 'component1',
+      label: 'Component 1',
+    },
+  ],
+};
+
 // mock for /api/v2/submissions/{submission_uuid}/steps/{step_uuid}
 const SUBMISSION_STEP_DETAILS = {
   id: '58aad9c3-29c7-4568-9047-3ac7ceb0f0ff',
   slug: 'step-1',
+  formStepUuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
   formStep: {
+    uuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
     index: 0,
-    configuration: {
-      components: [
-        {
-          id: 'asdiwj',
-          type: 'textfield',
-          key: 'component1',
-          label: 'Component 1',
-        },
-      ],
-    },
+    configuration: DEFAULT_FORMIO_CONFIGURATION,
   },
+  configuration: DEFAULT_FORMIO_CONFIGURATION,
+  defaultConfiguration: null,
+  requireBackendLogicEvaluation: true,
+  logicRules: [],
   data: null,
   isApplicable: true,
   completed: false,
@@ -95,18 +107,25 @@ interface BuildSubmissionStepOpts {
  * Return a submission step object as if it would be returned from the backend API.
  */
 export const buildSubmissionStep = ({
-  components = SUBMISSION_STEP_DETAILS.formStep.configuration.components,
+  components = SUBMISSION_STEP_DETAILS.configuration.components,
   data = null,
   canSubmit = true,
 }: BuildSubmissionStepOpts): SubmissionStep => {
-  const formioConfiguration: SubmissionStep['formStep']['configuration'] = {
-    type: 'form',
-    components,
-  };
+  const formioConfiguration: FormioConfiguration = {type: 'form', components};
   return {
     id: '6ca342af-86c7-451c-a19f-65050b2eee5c',
     slug: 'step-1',
-    formStep: {index: 0, configuration: formioConfiguration},
+    formStepUuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
+    // legacy
+    formStep: {
+      uuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
+      index: 0,
+      configuration: formioConfiguration,
+    },
+    configuration: formioConfiguration,
+    defaultConfiguration: null,
+    requireBackendLogicEvaluation: true,
+    logicRules: [],
     data: data,
     isApplicable: true,
     completed: false,
@@ -164,24 +183,25 @@ export const mockSubmissionCheckLogicPost = (
   });
 
 export const mockSubmissionSummaryGet = () =>
-  http.get(`${BASE_URL}submissions/:uuid/summary`, () =>
-    HttpResponse.json(
+  http.get(`${BASE_URL}submissions/:uuid/summary`, () => {
+    const component0 = SUBMISSION_STEP_DETAILS.configuration.components[0];
+    return HttpResponse.json(
       [
         {
           slug: SUBMISSION_STEP_DETAILS.slug,
           name: SUBMISSION_DETAILS.steps[0].name,
           data: [
             {
-              name: SUBMISSION_STEP_DETAILS.formStep.configuration.components[0].label,
+              name: 'label' in component0 ? component0.label : '',
               value: 'Component 1 value',
-              component: SUBMISSION_STEP_DETAILS.formStep.configuration.components[0],
+              component: component0,
             },
           ],
         },
       ],
       {status: 200}
-    )
-  );
+    );
+  });
 
 export const mockSubmissionCompletePost = () =>
   http.post(`${BASE_URL}submissions/:uuid/_complete`, () =>

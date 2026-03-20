@@ -20,10 +20,19 @@ export interface SubmissionCreateBody {
  * @see `#/components/schemas/NestedSubmissionStep` in the API spec.
  */
 export interface NestedSubmissionStep {
+  /**
+   * Step ID, UUID format. Identical to the UUID of the form step of the associated form.
+   */
   id: string;
   name: string;
   url: string;
   formStep: string;
+  /**
+   * Begin state for the `isApplicable` value, before any logic rules are evaluated.
+   *
+   * Available since 3.5.0+.
+   */
+  readonly defaultIsApplicable?: boolean;
   isApplicable: boolean;
   completed: boolean;
   canSubmit: boolean;
