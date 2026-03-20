@@ -23,7 +23,7 @@ import useFormContext from '@/hooks/useFormContext';
 
 import Progress from './Progress';
 import {
-  useCheckStepLogic,
+  useCheckBackendStepLogic,
   useFormioFormConfigurationParameters,
   useLoadStep,
   useResolveStepUrl,
@@ -117,7 +117,7 @@ const FormStepNewRenderer: React.FC = () => {
       formRef.current?.updateValues(updatedValues);
     }
   };
-  const {scheduleLogicCheck, inProgress: logicCheckInProgress} = useCheckStepLogic(
+  const {scheduleLogicCheck, inProgress: logicCheckInProgress} = useCheckBackendStepLogic(
     sparseStep.url,
     valuesRef,
     onLogicCheckResult

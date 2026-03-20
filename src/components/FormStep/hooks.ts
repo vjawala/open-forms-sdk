@@ -76,7 +76,7 @@ export const useLoadStep = (
   return state;
 };
 
-interface CheckStepLogic {
+interface CheckBackendStepLogic {
   scheduleLogicCheck: () => void;
   inProgress: boolean;
 }
@@ -90,12 +90,12 @@ interface CheckStepLogic {
  * @todo strip out invalid keys from the data
  * @todo incorporate the email verification
  */
-export const useCheckStepLogic = (
+export const useCheckBackendStepLogic = (
   submissionStepUrl: string,
   valuesRef: React.MutableRefObject<JSONObject | null>,
   onLogicCheckResult: (submission: Submission, step: SubmissionStep) => void,
   debounce_ms: number = 500
-): CheckStepLogic => {
+): CheckBackendStepLogic => {
   const timerRef = useRef<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const [inProgress, setInProgress] = useState<boolean>(false);
