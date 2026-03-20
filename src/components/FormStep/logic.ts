@@ -1,0 +1,181 @@
+import {getRegistryEntry} from '@open-formulieren/formio-renderer';
+import {getComponentsMap} from '@open-formulieren/formio-renderer/formio.js';
+import {deepMergeValues, extractInitialValues} from '@open-formulieren/formio-renderer/values.js';
+import type {AnyComponentSchema, JSONObject} from '@open-formulieren/types';
+import {setIn} from 'formik';
+import {isEqual} from 'lodash';
+
+import type {LogicRule} from '@/data/logic';
+import type {SubmissionStep} from '@/data/submission-steps';
+import type {Submission} from '@/data/submissions';
+import {
+  applyDisableNextAction,
+  applyPropertyAction,
+  applyStepApplicableAction,
+  applyStepNotApplicableAction,
+  applyVariableAction,
+  evaluateJsonLogic,
+  isDisableNextAction,
+  isPropertyAction,
+  isStepApplicableAction,
+  isStepNotApplicableAction,
+  isVariableAction,
+} from '@/logic';
+import type {LogicEvaluationState} from '@/logic';
+
+interface EvaluateArgs {
+  /**
+   * The submission for which logic is being evaluated.
+   */
+  submission: Submission;
+  /**
+   * Current step for which the logic is being evaluated.
+   */
+  step: SubmissionStep;
+  /**
+   * Set of logic rules (in order of execution) to evaluate.
+   */
+  rules: LogicRule[];
+  /**
+   * The current submission data to use as input. Value mutations are tracked throughout
+   * the evaluation and have immediate effect.
+   */
+  inputData: JSONObject;
+  /**
+   * The original form configuration without any logic rule evaluation applied by the
+   * backend. Used to determine the 'starting' point of each component when no rule
+   * is triggered, and is necessary to revert state if rules are toggling between
+   * triggered and not triggered.
+   */
+  components: AnyComponentSchema[];
+  /**
+   * Callback to invoke at the end of the evaluation so that the submission state
+   * and submission step state can be updated with the rule evaluation side effects.
+   */
+  onLogicCheckResult: (
+    submission: Submission,
+    step: SubmissionStep,
+    errorsToClear: string[]
+  ) => void;
+}
+
+/**
+ * Given the rules and submission data, evaluate the logic rules and apply the side
+ * effects via `onLogicCheckResult`.
+ */
+export const evaluateBackendRules = ({
+  submission,
+  step,
+  rules,
+  inputData,
+  components,
+  onLogicCheckResult,
+}: EvaluateArgs): void => {
+  // if there are *no* logic rules, do nothing. It's free real estate!
+  if (rules.length === 0) {
+    return;
+  }
+
+  // create a deep copy that we can mutate without unexpected side-effects & derive the
+  // components map from it.
+  const updatedComponents = window.structuredClone(components);
+  const parentLinks: Record<string, string> = {};
+  const componentsMap = getComponentsMap(updatedComponents, parentLinks);
+
+  // Set up the evaluation state to pass through all rules and actions. It will be
+  // mutated throughout the evaluation process.
+  let evaluationState: LogicEvaluationState = {
+    ruleIsTriggered: false, // will be overriden for each rule
+    currentStepUuid: step.formStepUuid,
+    componentsMap,
+    componentParentLinks: parentLinks,
+    data: inputData,
+    dataUpdates: {},
+    initialValues: deepMergeValues(extractInitialValues(components, getRegistryEntry), inputData),
+    errorsToClear: [],
+    disableNext: false,
+    stepsApplicableUpdates: {},
+  };
+
+  for (const rule of rules) {
+    evaluationState = evaluateRule(rule, evaluationState);
+  }
+
+  const {
+    data: updatedData,
+    dataUpdates,
+    errorsToClear,
+    disableNext,
+    stepsApplicableUpdates,
+  } = evaluationState;
+  const canSubmit = !disableNext;
+
+  const hasDataChanged = updatedData !== inputData;
+  const hasComponentConfigurationChanged = !isEqual(components, updatedComponents);
+  const hasStepsApplicableUpdates = Object.keys(stepsApplicableUpdates).length > 0;
+
+  if (
+    !hasDataChanged &&
+    !hasComponentConfigurationChanged &&
+    !errorsToClear.length &&
+    !canSubmit &&
+    !hasStepsApplicableUpdates
+  )
+    return;
+
+  let updatedStep: SubmissionStep = setIn(step, 'configuration.components', updatedComponents);
+  updatedStep = setIn(updatedStep, 'data', dataUpdates);
+  updatedStep = setIn(updatedStep, 'canSubmit', canSubmit);
+
+  let updatedSubmission = submission;
+  // first, reset the `isApplicable` state to its begin and then apply the side effects
+  // of the logic actions.
+  for (let i = 0; i < updatedSubmission.steps.length; i++) {
+    const submissionStep = updatedSubmission.steps[i];
+    const isApplicable: boolean =
+      submissionStep.id in stepsApplicableUpdates
+        ? stepsApplicableUpdates[submissionStep.id]
+        : submissionStep.defaultIsApplicable;
+    updatedSubmission = setIn(updatedSubmission, `steps.${i}.isApplicable`, isApplicable);
+  }
+  onLogicCheckResult(updatedSubmission, updatedStep, errorsToClear);
+};
+
+/**
+ * Evaluate a single logic rule and apply the side effects to the evaluation state.
+ *
+ * @returns the updated evaluation state.
+ */
+const evaluateRule = (
+  rule: LogicRule,
+  evaluationState: LogicEvaluationState
+): LogicEvaluationState => {
+  const isTriggered = evaluateJsonLogic(rule.jsonLogicTrigger, evaluationState.data);
+  // Store the rule trigger check result in the state, and ensure the other object references
+  // remain identical so that mutations are not lost.
+  const ruleScopedState: LogicEvaluationState = setIn(
+    evaluationState,
+    'ruleIsTriggered',
+    isTriggered
+  );
+
+  // FIXME: these deep structures don't type-narrow, so we must use type guards for
+  // now. It requires proper backend re-design as well.
+  for (const action of rule.actions) {
+    if (isPropertyAction(action)) {
+      applyPropertyAction(ruleScopedState, action);
+    } else if (isVariableAction(action)) {
+      applyVariableAction(ruleScopedState, action);
+    } else if (isDisableNextAction(action)) {
+      applyDisableNextAction(ruleScopedState, action);
+    } else if (isStepNotApplicableAction(action)) {
+      applyStepNotApplicableAction(ruleScopedState, action);
+    } else if (isStepApplicableAction(action)) {
+      applyStepApplicableAction(ruleScopedState, action);
+    } else {
+      const exhaustiveCheck: never = action;
+      throw new Error(`Unhandled action type: ${JSON.stringify(exhaustiveCheck)}`);
+    }
+  }
+  return ruleScopedState;
+};
