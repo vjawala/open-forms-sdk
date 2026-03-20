@@ -133,10 +133,18 @@ export const buildSubmissionStep = ({
   } satisfies SubmissionStep;
 };
 
-export const mockSubmissionStepGet = (stepDetails: SubmissionStep = SUBMISSION_STEP_DETAILS) =>
-  http.get(`${BASE_URL}submissions/:uuid/steps/:stepUuid`, () => {
-    return HttpResponse.json(stepDetails, {status: 200});
-  });
+export const mockSubmissionStepGet = (
+  stepDetails: SubmissionStep | undefined = SUBMISSION_STEP_DETAILS,
+  stepDetailsMap?: Record<string, SubmissionStep>
+) =>
+  http.get<{uuid: string; stepUuid: string}>(
+    `${BASE_URL}submissions/:uuid/steps/:stepUuid`,
+    ({params}) => {
+      const {stepUuid} = params;
+      const stepDetailsResponse = stepDetailsMap ? stepDetailsMap[stepUuid] : stepDetails;
+      return HttpResponse.json(stepDetailsResponse, {status: 200});
+    }
+  );
 
 export const mockSubmissionStepValidatePost = (
   errors: Record<string, string> | undefined = undefined
