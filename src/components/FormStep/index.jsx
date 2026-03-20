@@ -114,15 +114,13 @@ const initialState = {
 const reducer = (draft, action) => {
   switch (action.type) {
     case 'STEP_LOADED': {
-      const {
-        data,
-        formStep: {configuration},
-        canSubmit,
-      } = action.payload;
-      draft.configuration = configuration;
-      draft.backendData = data;
+      const step = action.payload;
+      // TODO: remove fallback once https://github.com/open-formulieren/open-forms/pull/6096
+      // is merged.
+      draft.configuration = step.configuration ?? step.formStep.configuration;
+      draft.backendData = step.data;
       draft.formioInitialized = false;
-      draft.canSubmit = canSubmit;
+      draft.canSubmit = step.canSubmit;
       draft.logicChecking = false;
       draft.isNavigating = false;
       break;
