@@ -1,7 +1,7 @@
 import type {JSONObject, JSONValue} from '@open-formulieren/types';
 
 import evaluate from '.';
-import sharedTests from '../../org-dotgithub/json-logic/custom-operators.json';
+import sharedTests from '../../../org-dotgithub/json-logic/custom-operators.json';
 
 interface CasesGroup {
   name: string;
