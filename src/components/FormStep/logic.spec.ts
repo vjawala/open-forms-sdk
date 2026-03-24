@@ -85,7 +85,7 @@ test('rule evaluation immediately applies value changes', () => {
     inputData: {textfield: 'foo', number: null, radio: null},
     components: step.defaultConfiguration!.components ?? [],
     onLogicCheckResult: (_, step) => {
-      updatedComponents = step.configuration!.components;
+      updatedComponents = step.configuration.components;
       dataUpdates = step.data;
     },
   });

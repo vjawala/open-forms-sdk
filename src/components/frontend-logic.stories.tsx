@@ -400,8 +400,6 @@ const STEP_DETAILS_MAP: Record<string, SubmissionStep> = {
       },
     ],
     data: null,
-    isApplicable: true,
-    completed: false,
     canSubmit: true,
   } satisfies SubmissionStep,
   // Step 2 & 3 are deliberately not defined - they only exist for the

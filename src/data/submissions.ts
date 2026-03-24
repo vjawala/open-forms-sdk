@@ -29,10 +29,8 @@ export interface NestedSubmissionStep {
   formStep: string;
   /**
    * Begin state for the `isApplicable` value, before any logic rules are evaluated.
-   *
-   * Available since 3.5.0+.
    */
-  readonly defaultIsApplicable?: boolean;
+  readonly defaultIsApplicable: boolean;
   isApplicable: boolean;
   completed: boolean;
   canSubmit: boolean;

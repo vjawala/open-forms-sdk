@@ -59,17 +59,7 @@ const FormStepNewRenderer: React.FC = () => {
   const onStepLoaded = useCallback(
     (step: SubmissionStep) => {
       valuesRef.current = step.data;
-      // TODO: remove fallback once https://github.com/open-formulieren/open-forms/pull/6096 is
-      // merged
-      let components: AnyComponentSchema[];
-      if (step.configuration !== undefined) {
-        components = step.configuration.components;
-      } else if (step.formStep !== undefined) {
-        components = step.formStep.configuration.components;
-      } else {
-        throw new Error('Either toplevel `configuration` or `formStep` must be provided');
-      }
-      setComponents(components);
+      setComponents(step.configuration.components);
       setStepSubmissionAllowed(step.canSubmit);
       setDebugStepValues(step.data, true);
     },
@@ -95,14 +85,7 @@ const FormStepNewRenderer: React.FC = () => {
   const onLogicCheckResult = (updatedSubmission: Submission, updatedStep: SubmissionStep) => {
     onSubmissionObtained(updatedSubmission);
     // update the components that may be updated by backend logic
-    let newComponents: AnyComponentSchema[];
-    if (updatedStep.configuration !== undefined) {
-      newComponents = updatedStep.configuration.components;
-    } else if (updatedStep.formStep !== undefined) {
-      newComponents = updatedStep.formStep.configuration.components;
-    } else {
-      throw new Error('Either toplevel `configuration` or `formStep` must be provided');
-    }
+    const newComponents = updatedStep.configuration.components;
     if (!isEqual(newComponents, components)) {
       setComponents(newComponents);
     }
