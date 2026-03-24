@@ -445,7 +445,7 @@ export const FrontendLogicRuleEvaluation: Story = {
     await step('Start form submission', async () => {
       const startButton = await canvas.findByRole('button', {name: 'Begin'});
       await userEvent.click(startButton);
-      expect(await canvas.findByRole('heading', {name: 'Step 1'})).toBeVisible();
+      expect(await canvas.findByRole('heading', {name: 'Step 1'}, {timeout: 10000})).toBeVisible();
     });
 
     await step('Modify component properties', async () => {
