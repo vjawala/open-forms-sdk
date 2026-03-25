@@ -11,4 +11,4 @@ export const allModes = {
   desktop: {
     viewport: 'desktop',
   },
-};
+} as const;

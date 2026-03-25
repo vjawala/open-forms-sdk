@@ -439,6 +439,13 @@ export default {
 type Story = StoryObj<typeof AppWrapper>;
 
 export const FrontendLogicRuleEvaluation: Story = {
+  parameters: {
+    chromatic: {
+      modes: {
+        mobile: {disable: true},
+      },
+    },
+  },
   play: async ({canvasElement, step}) => {
     const canvas = within(canvasElement);
 
