@@ -1,7 +1,7 @@
 import {getRegistryEntry} from '@open-formulieren/formio-renderer';
 import {getComponentsMap} from '@open-formulieren/formio-renderer/formio.js';
 import {deepMergeValues, extractInitialValues} from '@open-formulieren/formio-renderer/values.js';
-import type {AnyComponentSchema, JSONObject} from '@open-formulieren/types';
+import type {AnyComponentSchema, JSONObject, JSONValue} from '@open-formulieren/types';
 import {setIn} from 'formik';
 import {isEqual} from 'lodash';
 
@@ -178,4 +178,8 @@ const evaluateRule = (
     }
   }
   return ruleScopedState;
+};
+
+export const getComponentEmptyValue = (component: AnyComponentSchema): JSONValue => {
+  return '';
 };

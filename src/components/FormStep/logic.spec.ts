@@ -1,10 +1,10 @@
-import type {AnyComponentSchema, JSONObject} from '@open-formulieren/types';
+import type {AnyComponentSchema, JSONObject, JSONValue} from '@open-formulieren/types';
 
 import {buildSubmission, buildSubmissionStep} from '@/api-mocks';
 import type {LogicRule} from '@/data/logic';
 import type {SubmissionStep} from '@/data/submission-steps';
 
-import {evaluateBackendRules} from './logic';
+import {evaluateBackendRules, getComponentEmptyValue} from './logic';
 
 // if a second rule depens on the mutated value of a field, this must be reflected
 // immediately
@@ -483,3 +483,457 @@ test('clearOnHide behaviour when hiding a parent (match backend behaviour)', () 
     observer: true,
   });
 });
+
+test.each([
+  [
+    {
+      type: 'textfield',
+      id: 'textfield',
+      key: 'textfield',
+      label: '',
+      defaultValue: 'ignored',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'textfield',
+      id: 'textfield',
+      key: 'textfield',
+      label: '',
+      defaultValue: ['ignored'],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'email',
+      id: 'email',
+      key: 'email',
+      label: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'email',
+      id: 'email',
+      key: 'email',
+      label: '',
+      defaultValue: [],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'date',
+      id: 'date',
+      key: 'date',
+      label: '',
+      defaultValue: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'date',
+      id: 'date',
+      key: 'date',
+      label: '',
+      defaultValue: [''],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'datetime',
+      id: 'datetime',
+      key: 'datetime',
+      label: '',
+      defaultValue: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'datetime',
+      id: 'datetime',
+      key: 'datetime',
+      label: '',
+      defaultValue: [''],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'time',
+      id: 'time',
+      key: 'time',
+      label: '',
+      defaultValue: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'time',
+      id: 'time',
+      key: 'time',
+      label: '',
+      defaultValue: [''],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'phoneNumber',
+      id: 'phoneNumber',
+      key: 'phoneNumber',
+      label: '',
+      defaultValue: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'phoneNumber',
+      id: 'phoneNumber',
+      key: 'phoneNumber',
+      label: '',
+      defaultValue: [''],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'postcode',
+      id: 'postcode',
+      key: 'postcode',
+      label: '',
+      defaultValue: '',
+      validate: {
+        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
+      },
+    },
+    '',
+  ],
+  [
+    {
+      type: 'postcode',
+      id: 'postcode',
+      key: 'postcode',
+      label: '',
+      defaultValue: [''],
+      validate: {
+        pattern: '^[1-9][0-9]{3} ?(?!sa|sd|ss|SA|SD|SS)[a-zA-Z]{2}$',
+      },
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'file',
+      id: 'file',
+      key: 'file',
+      label: '',
+      file: {
+        name: '',
+        type: [],
+        allowedTypesLabels: [],
+      },
+      filePattern: '',
+    },
+    [],
+  ],
+  [
+    {
+      type: 'file',
+      id: 'file',
+      key: 'file',
+      label: '',
+      file: {
+        name: '',
+        type: [],
+        allowedTypesLabels: [],
+      },
+      filePattern: '',
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'textarea',
+      id: 'textarea',
+      key: 'textarea',
+      label: '',
+      defaultValue: '',
+      autoExpand: false,
+    },
+    '',
+  ],
+  [
+    {
+      type: 'textarea',
+      id: 'textarea',
+      key: 'textarea',
+      label: '',
+      defaultValue: [''],
+      autoExpand: false,
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'number',
+      id: 'number',
+      key: 'number',
+      label: '',
+      defaultValue: 0,
+    },
+    null,
+  ],
+  [
+    {
+      type: 'checkbox',
+      id: 'checkbox',
+      key: 'checkbox',
+      label: '',
+      defaultValue: true,
+    },
+    false,
+  ],
+  [
+    {
+      type: 'selectboxes',
+      id: 'selectboxes',
+      key: 'selectboxes',
+      label: '',
+      values: [{value: 'a', label: 'A'}],
+      openForms: {dataSrc: 'manual'},
+    },
+    {a: false},
+  ],
+  [
+    {
+      type: 'selectboxes',
+      id: 'selectboxes',
+      key: 'selectboxes',
+      label: '',
+      values: [{value: '', label: ''}],
+      openForms: {dataSrc: 'manual'},
+    },
+    {},
+  ],
+  [
+    {
+      type: 'select',
+      id: 'select',
+      key: 'select',
+      label: '',
+      defaultValue: '',
+      openForms: {dataSrc: 'manual'},
+      data: {values: []},
+    },
+    '',
+  ],
+  [
+    {
+      type: 'select',
+      id: 'select',
+      key: 'select',
+      label: '',
+      defaultValue: [''],
+      openForms: {dataSrc: 'manual'},
+      data: {values: []},
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'currency',
+      id: 'currency',
+      key: 'currency',
+      label: '',
+      currency: 'EUR',
+      defaultValue: 0,
+    },
+    null,
+  ],
+  [
+    {
+      type: 'radio',
+      id: 'radio',
+      key: 'radio',
+      label: '',
+      values: [{value: 'a', label: 'A'}],
+      openForms: {dataSrc: 'manual'},
+      defaultValue: null,
+    },
+    '',
+  ],
+  [
+    {
+      type: 'iban',
+      id: 'iban',
+      key: 'iban',
+      label: '',
+      defaultValue: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'iban',
+      id: 'iban',
+      key: 'iban',
+      label: '',
+      defaultValue: [''],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'licenseplate',
+      id: 'licenseplate',
+      key: 'licenseplate',
+      label: '',
+      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
+      defaultValue: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'licenseplate',
+      id: 'licenseplate',
+      key: 'licenseplate',
+      label: '',
+      validate: {pattern: '^[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}\\-[a-zA-Z0-9]{1,3}$'},
+      defaultValue: [''],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'bsn',
+      id: 'bsn',
+      key: 'bsn',
+      label: '',
+      defaultValue: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'bsn',
+      id: 'bsn',
+      key: 'bsn',
+      label: '',
+      defaultValue: [''],
+      multiple: true,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'signature',
+      id: 'signature',
+      key: 'signature',
+      label: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'cosign',
+      id: 'cosign',
+      key: 'cosign',
+      label: '',
+      defaultValue: '',
+    },
+    '',
+  ],
+  [
+    {
+      type: 'map',
+      id: 'map',
+      key: 'map',
+      label: '',
+    },
+    null,
+  ],
+  [
+    {
+      type: 'editgrid',
+      id: 'editgrid',
+      key: 'editgrid',
+      label: '',
+      groupLabel: '',
+      disableAddingRemovingRows: false,
+      components: [],
+    },
+    [],
+  ],
+  [
+    {
+      type: 'addressNL',
+      id: 'addressNL',
+      key: 'addressNL',
+      label: '',
+      layout: 'singleColumn',
+      deriveAddress: false,
+    },
+    // this does not make sense, but it's what the backend spits out. See
+    // https://github.com/open-formulieren/open-forms/issues/6125
+    '',
+  ],
+  [
+    {
+      type: 'partners',
+      id: 'partners',
+      key: 'partners',
+      label: '',
+    },
+    [],
+  ],
+  [
+    {
+      type: 'children',
+      id: 'children',
+      key: 'children',
+      label: '',
+      enableSelection: false,
+    },
+    [],
+  ],
+  [
+    {
+      type: 'customerProfile',
+      id: 'customerProfile',
+      key: 'customerProfile',
+      label: '',
+      shouldUpdateCustomerData: false,
+      digitalAddressTypes: [],
+    },
+    [],
+  ],
+] satisfies [AnyComponentSchema, JSONValue][])(
+  'component empty value is correctly determined (%o)',
+  (component: AnyComponentSchema, expectedValue: JSONValue) => {
+    const emptyValue = getComponentEmptyValue(component);
+
+    expect(emptyValue).toEqual(expectedValue);
+  }
+);
