@@ -335,3 +335,151 @@ test('clearOnHide behaviour with hidden parent', () => {
   // component does not effectively become visible
   expect(dataUpdates).toEqual({});
 });
+
+// The frontend evaluation of backend logic rules must exactly match the backend
+// behaviour, which includes *not* removing hidden component values from original input
+// for children of parents that become hidden. Eventually it does end up in that
+// situation, but that's entirely because of the *next* render cycle of the renderer.
+// See https://github.com/open-formulieren/open-forms/issues/6121 for the novella about
+// why this is necessary.
+test('clearOnHide behaviour when hiding a parent (match backend behaviour)', () => {
+  // set up a component definition without frontend (formio-renderer) logic, which
+  // establishes the actual begin state. The nested textfield displays the non-intuitive
+  // behaviour.
+  const components: AnyComponentSchema[] = [
+    {
+      type: 'checkbox',
+      id: 'trigger',
+      key: 'trigger',
+      label: 'Trigger',
+    },
+    {
+      type: 'fieldset',
+      id: 'fieldsetBeingHidden',
+      key: 'fieldsetBeingHidden',
+      label: 'Hidden fieldset',
+      hidden: false,
+      hideHeader: false,
+      components: [
+        // despite being hidden (because the parent becomes hidden), the input value
+        // from the visible state will be used as evaluation input.
+        {
+          type: 'textfield',
+          id: 'textfield',
+          key: 'textfield',
+          label: 'Textfield',
+          hidden: false,
+          clearOnHide: true,
+          defaultValue: 'default',
+        },
+      ],
+    },
+    // used as observer of the second logic rule effect.
+    {
+      type: 'checkbox',
+      id: 'observer',
+      key: 'observer',
+      label: 'Observer',
+      defaultValue: false,
+    },
+  ];
+  const submission = buildSubmission();
+  const step: SubmissionStep = {
+    ...buildSubmissionStep({components}),
+    defaultConfiguration: {components},
+  };
+
+  // Assumes the initial state where:
+  // * checkbox is unchecked
+  // * user enters value in textfield
+  // * user checks checkbox
+  const inputData: JSONObject = {
+    trigger: true,
+    textfield: 'user input',
+    observer: false,
+  };
+
+  const rules: LogicRule[] = [
+    // Rule triggers despite the component already being hidden through the hidden
+    // parent fieldset.
+    {
+      jsonLogicTrigger: {var: 'trigger'},
+      actions: [
+        {
+          action: {
+            type: 'property',
+            property: {value: 'hidden', type: 'bool'},
+            state: true,
+          },
+          component: 'fieldsetBeingHidden',
+        },
+      ],
+    },
+    // broken but current behaviour in backend: this triggers because the textfield being
+    // hidden does not remove the input data from the context/submission data. See #6121.
+    {
+      jsonLogicTrigger: {'==': [{var: 'textfield'}, 'user input']},
+      actions: [
+        {
+          action: {type: 'variable', value: true},
+          variable: 'observer',
+        },
+      ],
+    },
+  ];
+
+  let updatedComponents: AnyComponentSchema[] = [];
+  let dataUpdates: JSONObject | null = {};
+
+  evaluateBackendRules({
+    submission,
+    step,
+    rules,
+    inputData,
+    components: step.defaultConfiguration!.components ?? [],
+    onLogicCheckResult: (_, step) => {
+      updatedComponents = step.configuration.components;
+      dataUpdates = step.data;
+    },
+  });
+
+  expect(updatedComponents).toEqual([
+    {
+      type: 'checkbox',
+      id: 'trigger',
+      key: 'trigger',
+      label: 'Trigger',
+    },
+    {
+      type: 'fieldset',
+      id: 'fieldsetBeingHidden',
+      key: 'fieldsetBeingHidden',
+      label: 'Hidden fieldset',
+      hidden: true,
+      hideHeader: false,
+      components: [
+        {
+          type: 'textfield',
+          id: 'textfield',
+          key: 'textfield',
+          label: 'Textfield',
+          hidden: false,
+          clearOnHide: true,
+          defaultValue: 'default',
+        },
+      ],
+    },
+    {
+      type: 'checkbox',
+      id: 'observer',
+      key: 'observer',
+      label: 'Observer',
+      defaultValue: false,
+    },
+  ]);
+  // because the parent is still hidden, we don't expect any data updates as the
+  // component does not effectively become visible
+  expect(dataUpdates).toEqual({
+    observer: true,
+  });
+});
