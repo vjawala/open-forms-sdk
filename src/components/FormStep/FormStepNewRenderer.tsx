@@ -4,7 +4,7 @@ import type {JSONObject} from '@open-formulieren/formio-renderer/types.js';
 import type {AnyComponentSchema} from '@open-formulieren/types';
 import isEqual from 'fast-deep-equal';
 import {useFormikContext} from 'formik';
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate, useNavigation} from 'react-router';
 
 import {get} from '@/api';
@@ -125,6 +125,13 @@ const FormStepNewRenderer: React.FC = () => {
 
   if (state.error) throw state.error;
   const step = state.value;
+
+  // Schedule logic check when step is loaded
+  useEffect(() => {
+    if (step === undefined) return;
+    scheduleLogicCheck();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
 
   const isLoading = state.loading || navigationState !== 'idle';
 
