@@ -5,7 +5,12 @@ import {expect, userEvent, within} from 'storybook/test';
 
 import {FormContext} from '@/Context';
 import {BASE_URL, buildForm, mockAnalyticsToolConfigGet} from '@/api-mocks';
-import {buildSubmission, mockSubmissionPost, mockSubmissionStepGet} from '@/api-mocks/submissions';
+import {
+  buildSubmission,
+  mockSubmissionCheckLogicPost,
+  mockSubmissionPost,
+  mockSubmissionStepGet,
+} from '@/api-mocks/submissions';
 import type {SubmissionStep} from '@/data/submission-steps';
 import routes, {FUTURE_FLAGS} from '@/routes';
 import {withNuqs} from '@/sb-decorators';
@@ -429,8 +434,11 @@ export default {
         analytics: [mockAnalyticsToolConfigGet()],
         submission: [mockSubmissionPost(SUBMISSION)],
         submissionStep: [mockSubmissionStepGet(undefined, STEP_DETAILS_MAP)],
-        // deliberately empty, as we expect logic evaluation to run client-side
-        logicCheck: [],
+        // requires the endpoint to be wired up for the initial fetch on submission step
+        // navigation, so we cannot leave the mock empty, unfortunately
+        logicCheck: [
+          mockSubmissionCheckLogicPost(SUBMISSION, STEP_DETAILS_MAP[FORM.steps[0].uuid]),
+        ],
       },
     },
   },
@@ -453,6 +461,9 @@ export const FrontendLogicRuleEvaluation: Story = {
       const startButton = await canvas.findByRole('button', {name: 'Begin'});
       await userEvent.click(startButton);
       expect(await canvas.findByRole('heading', {name: 'Step 1'}, {timeout: 10000})).toBeVisible();
+      // wait for the initially scheduled logic check to complete and the submit button
+      // to become available
+      expect(await canvas.findByRole('button', {name: 'Next'})).toBeVisible();
     });
 
     await step('Modify component properties', async () => {
