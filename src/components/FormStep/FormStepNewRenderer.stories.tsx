@@ -318,6 +318,13 @@ export const DisplayDataLoadedFromBackend: Story = {
           mockSubmissionStepGet(SUBMISSION_STEP_WITH_DATA_DETAIL_BODY),
           mockSubmissionStepPut(SUBMISSION_STEP_WITH_DATA_DETAIL_BODY, 201),
         ],
+        logicCheck: [
+          mockSubmissionCheckLogicPost(
+            DEFAULT_SUBMISSION,
+            SUBMISSION_STEP_WITH_DATA_DETAIL_BODY,
+            200
+          ),
+        ],
       },
     },
   },
@@ -347,6 +354,9 @@ export const BackendValidationError: Story = {
         submissionStep: [
           mockSubmissionStepGet(VALIDATION_ERRORS_STEP_DETAIL_BODY),
           mockSubmissionStepPut(VALIDATION_ERRORS_STEP_DETAIL_BODY, 201),
+        ],
+        logicCheck: [
+          mockSubmissionCheckLogicPost(DEFAULT_SUBMISSION, VALIDATION_ERRORS_STEP_DETAIL_BODY, 200),
         ],
         validate: [
           mockSubmissionStepValidatePost({
