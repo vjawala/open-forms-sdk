@@ -242,10 +242,10 @@ test('clearOnHide behaviour with hidden parent', () => {
     },
     {
       type: 'fieldset',
-      id: 'fieldsetHidden',
-      key: 'fieldsetHidden',
+      id: 'fieldsetBecomesHidden',
+      key: 'fieldsetBecomesHidden',
       label: 'Hidden fieldset',
-      hidden: true,
+      hidden: false,
       hideHeader: false,
       components: [
         {
@@ -253,9 +253,6 @@ test('clearOnHide behaviour with hidden parent', () => {
           id: 'textfield',
           key: 'textfield',
           label: 'Textfield',
-          hidden: true,
-          clearOnHide: true,
-          defaultValue: 'default',
         },
       ],
     },
@@ -275,9 +272,9 @@ test('clearOnHide behaviour with hidden parent', () => {
           action: {
             type: 'property',
             property: {value: 'hidden', type: 'bool'},
-            state: false,
+            state: true,
           },
-          component: 'textfield',
+          component: 'fieldsetBecomesHidden',
         },
       ],
     },
@@ -308,8 +305,8 @@ test('clearOnHide behaviour with hidden parent', () => {
     },
     {
       type: 'fieldset',
-      id: 'fieldsetHidden',
-      key: 'fieldsetHidden',
+      id: 'fieldsetBecomesHidden',
+      key: 'fieldsetBecomesHidden',
       label: 'Hidden fieldset',
       hidden: true,
       hideHeader: false,
@@ -319,15 +316,13 @@ test('clearOnHide behaviour with hidden parent', () => {
           id: 'textfield',
           key: 'textfield',
           label: 'Textfield',
-          hidden: false, // flipped, but effectively still hidden because of the parent
-          clearOnHide: true,
-          defaultValue: 'default',
         },
       ],
     },
   ]);
-  // because the parent is still hidden, we don't expect any data updates as the
-  // component does not effectively become visible
+  // we don't expect any data updates to textfield, because that would trigger infinite
+  // render cycles, despite it being hidden and getting the empty value assigned for
+  // evaluation during/between backend rules
   expect(dataUpdates).toEqual({});
 });
 

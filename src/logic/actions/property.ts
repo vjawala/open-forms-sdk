@@ -1,7 +1,6 @@
 import {getRegistryEntry} from '@open-formulieren/formio-renderer';
-import {isHidden} from '@open-formulieren/formio-renderer/formio.js';
 import {processVisibility} from '@open-formulieren/formio-renderer/visibility.js';
-import type {AnyComponentSchema, JSONObject, JSONValue} from '@open-formulieren/types';
+import type {JSONObject, JSONValue} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
 import {set} from 'lodash';
 
@@ -73,7 +72,12 @@ export const applyPropertyAction = (
       // access to the Formik state and can't even pass the errors.
       {},
       {
-        parentHidden: hasHiddenParent(targetComponent, logicState),
+        // for proper intuitive semantics, this would take into account the visibility
+        // state of the parent(s) via hasHiddenParent(targetComponent, logicState),
+        // but because of the `clearValueCallback` to match the backend behaviour, this
+        // is currently not relevan/correct. See
+        // https://github.com/open-formulieren/open-forms/issues/6121.
+        parentHidden: false,
         initialValues: logicState.initialValues,
         getRegistryEntry,
         componentsMap,
@@ -112,20 +116,4 @@ export const applyPropertyAction = (
   if (becameOptional) {
     logicState.errorsToClear.push(componentKey);
   }
-};
-
-const hasHiddenParent = (
-  component: AnyComponentSchema,
-  logicState: LogicEvaluationState
-): boolean => {
-  const parentKey: string | undefined = logicState.componentParentLinks[component.key];
-  // not present in lookup map -> it doesn't have any parents
-  if (!parentKey) return false;
-  // test the parent - if it's visible, recurse as there may be hidden grand parent(s)
-  const parent = logicState.componentsMap[parentKey];
-  // `isHidden` considers the `conditional` and `hidden` properties.
-  if (isHidden(parent, logicState.data, getRegistryEntry, logicState.componentsMap)) {
-    return true;
-  }
-  return hasHiddenParent(parent, logicState);
 };
