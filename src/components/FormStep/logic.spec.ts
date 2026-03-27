@@ -125,8 +125,8 @@ test('rule evaluation immediately applies value changes', () => {
 
 test('clearOnHide behaviour is applied', () => {
   const rules: LogicRule[] = [
-    // mark textfield as hidden when checkbox is checked, which should clear its
-    // value
+    // mark textfield as hidden when checkbox is checked, which will eventually clear
+    // its value because the renderer detects it's hidden and clears it.
     {
       jsonLogicTrigger: {var: 'trigger'},
       actions: [
@@ -140,10 +140,11 @@ test('clearOnHide behaviour is applied', () => {
         },
       ],
     },
-    // show number input when textfield has empty-ish value, which will be the case
-    // because the previous rule hides it and clearOnHide is enabled.
+    // show number input when textfield is not empty-ish. Normally you'd invert this,
+    // but the clear-on-hide behaviour actually restores the original input data rather
+    // than making it empty-ish.
     {
-      jsonLogicTrigger: {'!': [{var: 'textfield'}]},
+      jsonLogicTrigger: {'!!': [{var: 'textfield'}]},
       actions: [
         {
           action: {
@@ -192,7 +193,7 @@ test('clearOnHide behaviour is applied', () => {
     submission,
     step,
     rules,
-    inputData: {trigger: true, textfield: 'clear-me'},
+    inputData: {trigger: true, textfield: 'do-not-clear-me'},
     components: step.defaultConfiguration!.components ?? [],
     onLogicCheckResult: (_, step) => {
       updatedComponents = step.configuration.components;
@@ -200,15 +201,9 @@ test('clearOnHide behaviour is applied', () => {
     },
   });
 
+  // we don't expect any updates to `textfield`, as that would lead to infinite check
+  // logic cycles (similar to the backend check logic loop)
   expect(dataUpdates).toEqual({
-    /**
-     * The backend returns the component-type specific empty value because there the
-     * the 'undefined' concept doesn't exist. The renderer actually takes care of
-     * unsetting that data entirely for the hidden components. Here we use the same
-     * client-side logic and we can already omit the key and save one update cycle +
-     * keep code simpler.
-     */
-    // textfield: '',
     number: 67,
   });
   expect(updatedComponents).toEqual([

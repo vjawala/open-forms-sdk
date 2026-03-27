@@ -1,9 +1,11 @@
 import {getRegistryEntry} from '@open-formulieren/formio-renderer';
 import {isHidden} from '@open-formulieren/formio-renderer/formio.js';
 import {processVisibility} from '@open-formulieren/formio-renderer/visibility.js';
-import type {AnyComponentSchema} from '@open-formulieren/types';
+import type {AnyComponentSchema, JSONObject, JSONValue} from '@open-formulieren/types';
+import {getIn, setIn} from 'formik';
 import {set} from 'lodash';
 
+import {getComponentEmptyValue} from '@/components/FormStep/logic';
 import type {LogicAction, PropertyAction} from '@/data/logic';
 
 import type {LogicEvaluationState} from './types';
@@ -76,6 +78,30 @@ export const applyPropertyAction = (
         getRegistryEntry,
         componentsMap,
         dataUpdatesAccumulator: logicState.dataUpdates,
+        // Ensure we restore the original input data OR empty value when clearing the
+        // value so that we match the backend behaviour. The formio-renderer will take
+        // care of properly removing the key from the submission data.
+        // See https://github.com/open-formulieren/open-forms/issues/6121
+        clearValueCallback: (values: JSONObject, key: string): JSONObject => {
+          const component = componentsMap[key];
+          if (
+            ['fieldset', 'columns', 'content', 'softRequiredErrors', 'coSign'].includes(
+              component.type
+            )
+          ) {
+            return values;
+          }
+
+          const initialValue: JSONValue | undefined = getIn(logicState.initialValues, key);
+          const clearedValue: JSONValue =
+            initialValue !== undefined ? initialValue : getComponentEmptyValue(component);
+          // if an initialValues was grabbed, then by definition it's not a data diff
+          // update. Otherwise it is and we need to add it to the dataUpdates.
+          if (initialValue === undefined) {
+            set(logicState.dataUpdates, key, clearedValue);
+          }
+          return setIn(values, key, clearedValue);
+        },
       }
     );
     logicState.data = updatedValues;
