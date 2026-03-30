@@ -81,6 +81,7 @@ export const evaluateBackendRules = ({
   const updatedComponents = window.structuredClone(components);
   const parentLinks: Record<string, string> = {};
   const componentsMap = getComponentsMap(updatedComponents, parentLinks);
+  const initialValues = extractInitialValues(components, getRegistryEntry);
 
   // Set up the evaluation state to pass through all rules and actions. It will be
   // mutated throughout the evaluation process.
@@ -91,7 +92,8 @@ export const evaluateBackendRules = ({
     componentParentLinks: parentLinks,
     data: inputData,
     dataUpdates: {},
-    initialValues: deepMergeValues(extractInitialValues(components, getRegistryEntry), inputData),
+    initialValues: deepMergeValues(initialValues, inputData),
+    initialValuesForClearOnHide: initialValues,
     errorsToClear: [],
     disableNext: false,
     stepsApplicableUpdates: {},

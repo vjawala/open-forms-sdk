@@ -48,6 +48,12 @@ export interface LogicEvaluationState {
    */
   readonly initialValues: JSONObject;
   /**
+   * The begin state of component values without user input data, used to populate the
+   * data for components that become hidden. Equal to the component default value
+   * or the component-specific empty value (in that order).
+   */
+  readonly initialValuesForClearOnHide: JSONObject;
+  /**
    * List of keys/dotted paths to components for which the validation errors must be
    * cleared. The formio-renderer automatically takes care of managing validation errors
    * for components that become hidden, but other logic interactions like making a

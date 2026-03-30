@@ -140,11 +140,9 @@ test('clearOnHide behaviour is applied', () => {
         },
       ],
     },
-    // show number input when textfield is not empty-ish. Normally you'd invert this,
-    // but the clear-on-hide behaviour actually restores the original input data rather
-    // than making it empty-ish.
+    // show number input when textfield is empty.
     {
-      jsonLogicTrigger: {'!!': [{var: 'textfield'}]},
+      jsonLogicTrigger: {'!': [{var: 'textfield'}]},
       actions: [
         {
           action: {
@@ -193,7 +191,7 @@ test('clearOnHide behaviour is applied', () => {
     submission,
     step,
     rules,
-    inputData: {trigger: true, textfield: 'do-not-clear-me'},
+    inputData: {trigger: true, textfield: 'clear-me'},
     components: step.defaultConfiguration!.components ?? [],
     onLogicCheckResult: (_, step) => {
       updatedComponents = step.configuration.components;
@@ -201,11 +199,6 @@ test('clearOnHide behaviour is applied', () => {
     },
   });
 
-  // we don't expect any updates to `textfield`, as that would lead to infinite check
-  // logic cycles (similar to the backend check logic loop)
-  expect(dataUpdates).toEqual({
-    number: 67,
-  });
   expect(updatedComponents).toEqual([
     {
       type: 'checkbox',
@@ -230,6 +223,11 @@ test('clearOnHide behaviour is applied', () => {
       defaultValue: 67,
     },
   ]);
+  // the textfield is to be cleared, and the number field doesn't change because the
+  // default value already matches with what the update would be
+  expect(dataUpdates).toEqual({
+    textfield: '',
+  });
 });
 
 test('clearOnHide behaviour with hidden parent', () => {
@@ -327,7 +325,7 @@ test('clearOnHide behaviour with hidden parent', () => {
 });
 
 // The frontend evaluation of backend logic rules must exactly match the backend
-// behaviour, which includes *not* removing hidden component values from original input
+// behaviour, which includes *not* removing hidden component values from default values
 // for children of parents that become hidden. Eventually it does end up in that
 // situation, but that's entirely because of the *next* render cycle of the renderer.
 // See https://github.com/open-formulieren/open-forms/issues/6121 for the novella about
@@ -351,8 +349,8 @@ test('clearOnHide behaviour when hiding a parent (match backend behaviour)', () 
       hidden: false,
       hideHeader: false,
       components: [
-        // despite being hidden (because the parent becomes hidden), the input value
-        // from the visible state will be used as evaluation input.
+        // despite being hidden (because the parent becomes hidden), the default value
+        // will be used as evaluation input.
         {
           type: 'textfield',
           id: 'textfield',
@@ -408,7 +406,7 @@ test('clearOnHide behaviour when hiding a parent (match backend behaviour)', () 
     // broken but current behaviour in backend: this triggers because the textfield being
     // hidden does not remove the input data from the context/submission data. See #6121.
     {
-      jsonLogicTrigger: {'==': [{var: 'textfield'}, 'user input']},
+      jsonLogicTrigger: {'==': [{var: 'textfield'}, 'default']},
       actions: [
         {
           action: {type: 'variable', value: true},
@@ -467,11 +465,89 @@ test('clearOnHide behaviour when hiding a parent (match backend behaviour)', () 
       defaultValue: false,
     },
   ]);
-  // because the parent is still hidden, we don't expect any data updates as the
-  // component does not effectively become visible
   expect(dataUpdates).toEqual({
+    textfield: 'default',
     observer: true,
   });
+});
+
+test('clearOnHide excludes data updates for child components', () => {
+  const components: AnyComponentSchema[] = [
+    {
+      type: 'checkbox',
+      id: 'trigger',
+      key: 'trigger',
+      label: 'Trigger',
+    },
+    {
+      type: 'fieldset',
+      id: 'fieldsetBeingHidden',
+      key: 'fieldsetBeingHidden',
+      label: 'Hidden fieldset',
+      hidden: false,
+      hideHeader: false,
+      components: [
+        {
+          type: 'textfield',
+          id: 'textfield',
+          key: 'textfield',
+          label: 'Textfield',
+        },
+        {
+          type: 'fieldset',
+          id: 'nestedFieldset',
+          key: 'nestedFieldset',
+          label: 'Nested fieldset',
+          hidden: false,
+          hideHeader: false,
+          components: [
+            {
+              type: 'textfield',
+              id: 'nestedTextfield',
+              key: 'nestedTextfield',
+              label: 'Nested textfield',
+            },
+          ],
+        },
+      ],
+    },
+  ];
+  const submission = buildSubmission();
+  const step: SubmissionStep = {
+    ...buildSubmissionStep({components}),
+    defaultConfiguration: {components},
+  };
+  const inputData: JSONObject = {trigger: true};
+  const rules: LogicRule[] = [
+    {
+      jsonLogicTrigger: {var: 'trigger'},
+      actions: [
+        {
+          action: {
+            type: 'property',
+            property: {value: 'hidden', type: 'bool'},
+            state: true,
+          },
+          component: 'fieldsetBeingHidden',
+        },
+      ],
+    },
+  ];
+  let dataUpdates: JSONObject | null = {};
+
+  evaluateBackendRules({
+    submission,
+    step,
+    rules,
+    inputData,
+    components: step.defaultConfiguration!.components ?? [],
+    onLogicCheckResult: (_, step) => {
+      dataUpdates = step.data;
+    },
+  });
+
+  // we expect no updates because they match the initial values.
+  expect(dataUpdates).toEqual({});
 });
 
 test.each([
