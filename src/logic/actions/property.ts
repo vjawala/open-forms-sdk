@@ -37,12 +37,6 @@ export const applyPropertyAction = (
   const targetComponent = componentsMap[componentKey];
   if (!targetComponent) return;
 
-  // The previous hidden state is the state relative to the current action and
-  // rule. It's possible another action/rule already modified the `hidden` state
-  // compared to the initial state before any logic rule was evaluated.
-  const wasPreviouslyHidden = 'hidden' in targetComponent && (targetComponent.hidden ?? false);
-
-  const hasVisibilityChange = propertyPath === 'hidden' && wasPreviouslyHidden !== state;
   const becameOptional = propertyPath === 'validate.required' && ruleIsTriggered !== state;
 
   if (ruleIsTriggered) {
@@ -54,7 +48,7 @@ export const applyPropertyAction = (
   // - restoring the value when a component becomes visible again
   //
   // both lead to updates in the submission data.
-  if (hasVisibilityChange) {
+  if (propertyPath === 'hidden' && ruleIsTriggered) {
     // XXX: backend logic rules targeting editgrids are currently not supported - this
     // codepath will need to be updated when we add support for that.
     const {updatedValues} = processVisibility(
@@ -72,6 +66,7 @@ export const applyPropertyAction = (
       // access to the Formik state and can't even pass the errors.
       {},
       {
+        emulateBackend: true,
         // for proper intuitive semantics, this would take into account the visibility
         // state of the parent(s) via hasHiddenParent(targetComponent, logicState),
         // but because of the `clearValueCallback` to match the backend behaviour, this
