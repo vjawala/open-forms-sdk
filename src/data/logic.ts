@@ -141,7 +141,7 @@ export interface LogicRule {
    * @note Open Forms extends JsonLogic with its own set of operators, see `src/logic`
    * for details.
    */
-  jsonLogicTrigger: JSONObject;
+  jsonLogicTrigger: JSONObject | boolean;
   /**
    * Collection of logic actions to execute when the trigger evaluates to truthy.
    *

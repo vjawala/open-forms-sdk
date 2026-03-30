@@ -1,4 +1,9 @@
-import type {AnyComponentSchema, JSONObject, JSONValue} from '@open-formulieren/types';
+import type {
+  AnyComponentSchema,
+  JSONObject,
+  JSONValue,
+  TextFieldComponentSchema,
+} from '@open-formulieren/types';
 
 import {buildSubmission, buildSubmissionStep} from '@/api-mocks';
 import type {LogicRule} from '@/data/logic';
@@ -1003,3 +1008,702 @@ test.each([
     expect(emptyValue).toEqual(expectedValue);
   }
 );
+
+// Collection of backend bugs that were encountered, mimick the regression tests to avoid
+// introducing the same problem.
+describe('backend regression tests', () => {
+  test('#6001 - do not clear valid input state', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'checkbox',
+        key: 'checkbox',
+        id: 'checkbox',
+        label: 'Checkbox',
+      },
+      {
+        type: 'fieldset',
+        key: 'fieldset',
+        id: 'fieldset',
+        label: 'Fieldset',
+        hidden: false,
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            key: 'textfieldClientSide',
+            id: 'textfieldClientSide',
+            label: 'textfieldClientSide',
+            hidden: true,
+            conditional: {
+              show: true,
+              when: 'checkbox',
+              eq: true,
+            },
+          },
+          {
+            type: 'textfield',
+            key: 'textfieldServerSide',
+            id: 'textfieldServerSide',
+            label: 'textfieldServerSide',
+            hidden: true,
+          },
+        ],
+      },
+      {
+        type: 'textarea',
+        key: 'calculatedTextarea',
+        id: 'calculatedTextarea',
+        label: 'Calculated text area content',
+        autoExpand: false,
+      },
+    ];
+
+    const rules: LogicRule[] = [
+      {
+        jsonLogicTrigger: {var: 'checkbox'},
+        actions: [
+          {
+            component: 'textfieldServerSide',
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+          },
+        ],
+      },
+      // we don't have client-side template interpolation, so use a `cat` value rule
+      // instead
+      {
+        jsonLogicTrigger: {'!!': true},
+        actions: [
+          {
+            action: {
+              type: 'variable',
+              value: {cat: [{var: 'textfieldClientSide'}, ' ', {var: 'textfieldServerSide'}]},
+            },
+            variable: 'calculatedTextarea',
+          },
+        ],
+      },
+    ];
+    const submission = buildSubmission();
+
+    const step: SubmissionStep = {
+      ...buildSubmissionStep({components}),
+      defaultConfiguration: {components},
+    };
+    let dataUpdates: JSONObject | null = {};
+
+    evaluateBackendRules({
+      submission,
+      step,
+      rules,
+      inputData: {
+        checkbox: true,
+        textfieldClientSide: 'client-side-visible',
+        textfieldServerSide: 'server-side-visible',
+      },
+      components: step.defaultConfiguration!.components ?? [],
+      onLogicCheckResult: (_, step) => {
+        dataUpdates = step.data;
+      },
+    });
+
+    expect(dataUpdates).toEqual({calculatedTextarea: 'client-side-visible server-side-visible'});
+  });
+
+  test('#6005 - rule 1 triggers rule 2 does not, must not clear value', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'radio',
+        key: 'radio',
+        id: 'radio',
+        label: '',
+        values: [
+          {value: 'a', label: 'A'},
+          {value: 'b', label: 'B'},
+        ],
+        openForms: {dataSrc: 'manual'},
+      },
+      {
+        type: 'textfield',
+        key: 'show-when-a',
+        id: 'show-when-a',
+        label: '',
+        hidden: true,
+      },
+    ];
+    const rules: LogicRule[] = [
+      {
+        jsonLogicTrigger: {'==': [{var: 'radio'}, 'a']},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+            component: 'show-when-a',
+          },
+        ],
+      },
+      {
+        jsonLogicTrigger: {'==': [{var: 'radio'}, 'nonsense-value']},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+            component: 'show-when-a',
+          },
+        ],
+      },
+    ];
+    const submission = buildSubmission();
+    const step: SubmissionStep = {
+      ...buildSubmissionStep({components}),
+      defaultConfiguration: {components},
+    };
+    let updatedComponents: AnyComponentSchema[] = [];
+    let dataUpdates: JSONObject | null = {};
+
+    evaluateBackendRules({
+      submission,
+      step,
+      rules,
+      inputData: {radio: 'a', 'show-when-a': 'do-not-clear-me'},
+      components: step.defaultConfiguration!.components ?? [],
+      onLogicCheckResult: (_, step) => {
+        updatedComponents = step.configuration.components;
+        dataUpdates = step.data;
+      },
+    });
+
+    expect(dataUpdates).toEqual({});
+    expect((updatedComponents[1] as TextFieldComponentSchema).hidden).toBe(false);
+  });
+
+  test('#6005 - rule 2 triggers rule 1 does not, must not clear value', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'radio',
+        key: 'radio',
+        id: 'radio',
+        label: '',
+        values: [
+          {value: 'a', label: 'A'},
+          {value: 'b', label: 'B'},
+        ],
+        openForms: {dataSrc: 'manual'},
+      },
+      {
+        type: 'textfield',
+        key: 'show-when-a',
+        id: 'show-when-a',
+        label: '',
+        hidden: true,
+      },
+    ];
+    const rules: LogicRule[] = [
+      {
+        jsonLogicTrigger: {'==': [{var: 'radio'}, 'nonsense-value']},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+            component: 'show-when-a',
+          },
+        ],
+      },
+      {
+        jsonLogicTrigger: {'==': [{var: 'radio'}, 'a']},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+            component: 'show-when-a',
+          },
+        ],
+      },
+    ];
+    const submission = buildSubmission();
+    const step: SubmissionStep = {
+      ...buildSubmissionStep({components}),
+      defaultConfiguration: {components},
+    };
+    let updatedComponents: AnyComponentSchema[] = [];
+    let dataUpdates: JSONObject | null = {};
+
+    evaluateBackendRules({
+      submission,
+      step,
+      rules,
+      inputData: {radio: 'a', 'show-when-a': 'do-not-clear-me'},
+      components: step.defaultConfiguration!.components ?? [],
+      onLogicCheckResult: (_, step) => {
+        updatedComponents = step.configuration.components;
+        dataUpdates = step.data;
+      },
+    });
+
+    expect(dataUpdates).toEqual({});
+    expect((updatedComponents[1] as TextFieldComponentSchema).hidden).toBe(false);
+  });
+
+  test('#6005 - rules flip from hidden to visible state must not clear value', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'radio',
+        key: 'radio',
+        id: 'radio',
+        label: '',
+        values: [
+          {value: 'a', label: 'A'},
+          {value: 'b', label: 'B'},
+        ],
+        openForms: {dataSrc: 'manual'},
+      },
+      {
+        type: 'checkbox',
+        key: 'checkbox',
+        id: 'checkbox',
+        label: '',
+      },
+      {
+        type: 'textfield',
+        key: 'hide-when-a-but-show-when-checkbox-checked',
+        id: 'hide-when-a-but-show-when-checkbox-checked',
+        label: '',
+        hidden: false,
+      },
+      {
+        type: 'fieldset',
+        key: 'fieldset',
+        id: 'fieldset',
+        label: '',
+        hidden: false,
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            key: 'nestedTextfield',
+            id: 'nestedTextfield',
+            label: '',
+            hidden: false,
+          },
+        ],
+      },
+      {
+        type: 'textfield',
+        key: 'observer',
+        id: 'observer',
+        label: '',
+        validate: {required: false},
+      },
+    ];
+    const rules: LogicRule[] = [
+      // Hide (and clear) the textfield when 'a' is selected in the radio
+      {
+        jsonLogicTrigger: {'==': [{var: 'radio'}, 'a']},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: true,
+            },
+            component: 'hide-when-a-but-show-when-checkbox-checked',
+          },
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: true,
+            },
+            component: 'fieldset',
+          },
+        ],
+      },
+      // Expected to trigger: the value of the textfield gets cleared because of the
+      // above rule.
+      {
+        jsonLogicTrigger: {'==': [{var: 'hide-when-a-but-show-when-checkbox-checked'}, '']},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'validate.required', type: 'bool'},
+              state: true,
+            },
+            component: 'observer',
+          },
+        ],
+      },
+      // show the textfield when the checkbox is checked
+      {
+        jsonLogicTrigger: {var: 'checkbox'},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+            component: 'hide-when-a-but-show-when-checkbox-checked',
+          },
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+            component: 'fieldset',
+          },
+        ],
+      },
+    ];
+    const submission = buildSubmission();
+    const step: SubmissionStep = {
+      ...buildSubmissionStep({components}),
+      defaultConfiguration: {components},
+    };
+    let updatedComponents: AnyComponentSchema[] = [];
+    let dataUpdates: JSONObject | null = {};
+
+    evaluateBackendRules({
+      submission,
+      step,
+      rules,
+      inputData: {
+        radio: 'a',
+        checkbox: true,
+        'hide-when-a-but-show-when-checkbox-checked': 'do-not-clear-me',
+        nestedTextfield: 'do-not-clear-me',
+      },
+      components: step.defaultConfiguration!.components ?? [],
+      onLogicCheckResult: (_, step) => {
+        updatedComponents = step.configuration.components;
+        dataUpdates = step.data;
+      },
+    });
+
+    expect(updatedComponents).toEqual([
+      {
+        type: 'radio',
+        key: 'radio',
+        id: 'radio',
+        label: '',
+        values: [
+          {value: 'a', label: 'A'},
+          {value: 'b', label: 'B'},
+        ],
+        openForms: {dataSrc: 'manual'},
+      },
+      {
+        type: 'checkbox',
+        key: 'checkbox',
+        id: 'checkbox',
+        label: '',
+      },
+      {
+        type: 'textfield',
+        key: 'hide-when-a-but-show-when-checkbox-checked',
+        id: 'hide-when-a-but-show-when-checkbox-checked',
+        label: '',
+        hidden: false,
+      },
+      {
+        type: 'fieldset',
+        key: 'fieldset',
+        id: 'fieldset',
+        label: '',
+        hidden: false,
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            key: 'nestedTextfield',
+            id: 'nestedTextfield',
+            label: '',
+            hidden: false,
+          },
+        ],
+      },
+      {
+        type: 'textfield',
+        key: 'observer',
+        id: 'observer',
+        label: '',
+        validate: {required: true},
+      },
+    ]);
+    expect(dataUpdates).toEqual({});
+  });
+
+  test('#6005 - rules flip from hidden to visible state must not clear value inverse', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'radio',
+        key: 'radio',
+        id: 'radio',
+        label: '',
+        values: [
+          {value: 'a', label: 'A'},
+          {value: 'b', label: 'B'},
+        ],
+        openForms: {dataSrc: 'manual'},
+      },
+      {
+        type: 'checkbox',
+        key: 'checkbox',
+        id: 'checkbox',
+        label: '',
+      },
+      {
+        type: 'textfield',
+        key: 'hide-when-a-but-show-when-checkbox-checked',
+        id: 'hide-when-a-but-show-when-checkbox-checked',
+        label: '',
+        hidden: true,
+      },
+      {
+        type: 'fieldset',
+        key: 'fieldset',
+        id: 'fieldset',
+        label: '',
+        hidden: true,
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            key: 'nestedTextfield',
+            id: 'nestedTextfield',
+            label: '',
+            hidden: false,
+          },
+        ],
+      },
+      {
+        type: 'textfield',
+        key: 'observer',
+        id: 'observer',
+        label: '',
+        validate: {required: false},
+      },
+    ];
+    const rules: LogicRule[] = [
+      // Hide (and clear) the textfield when 'a' is selected in the radio
+      {
+        jsonLogicTrigger: {'==': [{var: 'radio'}, 'a']},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: true,
+            },
+            component: 'hide-when-a-but-show-when-checkbox-checked',
+          },
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: true,
+            },
+            component: 'fieldset',
+          },
+        ],
+      },
+      // Expected to trigger: the value of the textfield gets cleared because of the
+      // above rule.
+      {
+        jsonLogicTrigger: {'==': [{var: 'hide-when-a-but-show-when-checkbox-checked'}, '']},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'validate.required', type: 'bool'},
+              state: true,
+            },
+            component: 'observer',
+          },
+        ],
+      },
+      // show the textfield when the checkbox is checked
+      {
+        jsonLogicTrigger: {var: 'checkbox'},
+        actions: [
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+            component: 'hide-when-a-but-show-when-checkbox-checked',
+          },
+          {
+            action: {
+              type: 'property',
+              property: {value: 'hidden', type: 'bool'},
+              state: false,
+            },
+            component: 'fieldset',
+          },
+        ],
+      },
+    ];
+    const submission = buildSubmission();
+    const step: SubmissionStep = {
+      ...buildSubmissionStep({components}),
+      defaultConfiguration: {components},
+    };
+    let updatedComponents: AnyComponentSchema[] = [];
+    let dataUpdates: JSONObject | null = {};
+
+    evaluateBackendRules({
+      submission,
+      step,
+      rules,
+      inputData: {
+        radio: 'a',
+        checkbox: true,
+        'hide-when-a-but-show-when-checkbox-checked': 'do-not-clear-me',
+        nestedTextfield: 'do-not-clear-me',
+      },
+      components: step.defaultConfiguration!.components ?? [],
+      onLogicCheckResult: (_, step) => {
+        updatedComponents = step.configuration.components;
+        dataUpdates = step.data;
+      },
+    });
+
+    expect(updatedComponents).toEqual([
+      {
+        type: 'radio',
+        key: 'radio',
+        id: 'radio',
+        label: '',
+        values: [
+          {value: 'a', label: 'A'},
+          {value: 'b', label: 'B'},
+        ],
+        openForms: {dataSrc: 'manual'},
+      },
+      {
+        type: 'checkbox',
+        key: 'checkbox',
+        id: 'checkbox',
+        label: '',
+      },
+      {
+        type: 'textfield',
+        key: 'hide-when-a-but-show-when-checkbox-checked',
+        id: 'hide-when-a-but-show-when-checkbox-checked',
+        label: '',
+        hidden: false,
+      },
+      {
+        type: 'fieldset',
+        key: 'fieldset',
+        id: 'fieldset',
+        label: '',
+        hidden: false,
+        hideHeader: false,
+        components: [
+          {
+            type: 'textfield',
+            key: 'nestedTextfield',
+            id: 'nestedTextfield',
+            label: '',
+            hidden: false,
+          },
+        ],
+      },
+      {
+        type: 'textfield',
+        key: 'observer',
+        id: 'observer',
+        label: '',
+        validate: {required: true},
+      },
+    ]);
+    expect(dataUpdates).toEqual({});
+  });
+
+  test('#6046 - variable action with non-triggered and property action', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'checkbox',
+        key: 'checkbox',
+        id: 'checkbox',
+        label: 'Checkbox',
+      },
+      {
+        key: 'textfield',
+        id: 'textfield',
+        type: 'textfield',
+        label: 'Textfield',
+        clearOnHide: true,
+      },
+    ];
+
+    const rules: LogicRule[] = [
+      {
+        jsonLogicTrigger: true,
+        actions: [
+          {
+            variable: 'textfield',
+            action: {
+              type: 'variable',
+              value: 'foo',
+            },
+          },
+        ],
+      },
+      {
+        jsonLogicTrigger: {'==': [{var: 'checkbox'}, true]},
+        actions: [
+          {
+            component: 'textfield',
+            action: {
+              type: 'property',
+              property: {
+                type: 'bool',
+                value: 'hidden',
+              },
+              state: true,
+            },
+          },
+        ],
+      },
+    ];
+    const submission = buildSubmission();
+    const step: SubmissionStep = {
+      ...buildSubmissionStep({components}),
+      defaultConfiguration: {components},
+    };
+    let dataUpdates: JSONObject | null = {};
+
+    evaluateBackendRules({
+      submission,
+      step,
+      rules,
+      inputData: {checkbox: false, textfield: 'user_input'},
+      components: step.defaultConfiguration!.components ?? [],
+      onLogicCheckResult: (_, step) => {
+        dataUpdates = step.data;
+      },
+    });
+
+    expect(dataUpdates).toEqual({textfield: 'foo'});
+  });
+});
