@@ -34,7 +34,6 @@ $fa-font-path: '../webfonts/' !default; // vite.config.mts overrides this
 @import './scss/components/app';
 @import './scss/components/anchor';
 @import './scss/components/abort-button';
-@import './scss/components/button';
 @import './scss/components/button-group';
 @import './scss/components/card';
 @import './scss/components/children';
@@ -69,11 +68,7 @@ $fa-font-path: '../webfonts/' !default; // vite.config.mts overrides this
 @import './scss/components/language-selection';
 @import './scss/components/login-options';
 @import './scss/components/login-button';
-@import './scss/components/login-button-logo';
-// TODO: obsolete when the new renderer goes live
-@import './scss/components/floating-widget';
-@import './scss/components/date-picker';
 @import './scss/components/authentication-errors';
 @import './scss/components/govmetric_snippet';
-// TODO: obsolete when the new renderer goes live
+// TODO: obsolete when formio.js is removed
 @import './scss/components/soft-required-errors';

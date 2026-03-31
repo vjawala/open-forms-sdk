@@ -9,7 +9,6 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@utrecht/component-library-react';
-import '@utrecht/table-css';
 import {FormattedMessage, useIntl} from 'react-intl';
 
 import FAIcon from '@/components/FAIcon';

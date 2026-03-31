@@ -12,8 +12,6 @@ import {initialize, mswLoader} from 'msw-storybook-addon';
 // @ts-expect-error formio has poor TS support
 import {Formio, Templates} from 'react-formio';
 import 'scss/dte-theme.scss';
-// load these AFTER the community styles, which is closer in simulating the CSS loading
-// order of our own components
 import 'styles.scss';
 
 // ensure NL locale is included

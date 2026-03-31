@@ -1,5 +1,6 @@
 @use 'microscope-sass/lib/bem';
 
+// TODO: these can only be removed once formio.js is removed
 @use '@utrecht/form-field-css/src/forward' as form-field;
 @use '@utrecht/form-fieldset-css/src/forward' as form-fieldset;
 
