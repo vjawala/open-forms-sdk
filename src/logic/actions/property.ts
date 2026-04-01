@@ -1,8 +1,8 @@
 import {getRegistryEntry} from '@open-formulieren/formio-renderer';
 import {processVisibility} from '@open-formulieren/formio-renderer/visibility.js';
-import type {AnyComponentSchema, JSONObject, JSONValue} from '@open-formulieren/types';
+import type {JSONObject, JSONValue} from '@open-formulieren/types';
 import {getIn, setIn} from 'formik';
-import {isEqual, set} from 'lodash';
+import {set} from 'lodash';
 
 import {getComponentEmptyValue} from '@/components/FormStep/logic';
 import type {LogicAction, PropertyAction} from '@/data/logic';
@@ -48,7 +48,7 @@ export const applyPropertyAction = (
   // - restoring the value when a component becomes visible again
   //
   // both lead to updates in the submission data.
-  if (propertyPath === 'hidden' && ruleIsTriggered) {
+  if (propertyPath === 'hidden') {
     // XXX: backend logic rules targeting editgrids are currently not supported - this
     // codepath will need to be updated when we add support for that.
     const {updatedValues} = processVisibility(
@@ -76,7 +76,6 @@ export const applyPropertyAction = (
         initialValues: logicState.initialValues,
         getRegistryEntry,
         componentsMap,
-        dataUpdatesAccumulator: logicState.dataUpdates,
         // Ensure we restore the default value OR empty value when clearing the
         // value so that we match the backend behaviour. The formio-renderer will take
         // care of properly removing the key from the submission data.
@@ -97,27 +96,11 @@ export const applyPropertyAction = (
           );
           const clearedValue: JSONValue =
             initialValue !== undefined ? initialValue : getComponentEmptyValue(component);
-          set(logicState.dataUpdates, key, clearedValue);
           return setIn(values, key, clearedValue);
         },
       }
     );
     logicState.data = updatedValues;
-    // only keep keys in the dataUpdates when their values are different from the initial
-    // data
-    const childComponentKeys = getChildKeys(targetComponent, logicState);
-    for (const key of [targetComponent.key, ...childComponentKeys]) {
-      const dataUpdate: JSONValue | undefined = getIn(logicState.dataUpdates, key);
-      // it may be absent because it's a component that doesn't hold data
-      const initialValue: JSONValue | undefined = getIn(logicState.initialValues, key);
-      // nothing to clear from updates, or there is no initial value to compare with
-      if (dataUpdate === undefined || initialValue === undefined) continue;
-      // if the 'update' is deeply equal to the initial value, it's not an update and
-      // should be removed to prevent infinite render loops
-      if (isEqual(dataUpdate, initialValue)) {
-        logicState.dataUpdates = setIn(logicState.dataUpdates, key, undefined);
-      }
-    }
   }
 
   // validate.required flipping from true -> false should reset possible 'this field
@@ -125,19 +108,4 @@ export const applyPropertyAction = (
   if (becameOptional) {
     logicState.errorsToClear.push(componentKey);
   }
-};
-
-const getChildKeys = (
-  component: AnyComponentSchema,
-  logicState: LogicEvaluationState
-): string[] => {
-  const {componentParentLinks} = logicState;
-  const childComponentKeys: string[] = [];
-  Object.entries(componentParentLinks).forEach(([childKey, parentKey]) => {
-    if (parentKey !== component.key) return;
-    childComponentKeys.push(childKey);
-    const childComponent = logicState.componentsMap[childKey];
-    childComponentKeys.push(...getChildKeys(childComponent, logicState));
-  });
-  return childComponentKeys;
 };

@@ -23,30 +23,21 @@ export interface LogicEvaluationState {
    */
   componentsMap: Record<string, AnyComponentSchema>;
   /**
-   * Mapping of child component key to its parent component key, if it has a parent.
-   * Root components are not present.
-   */
-  readonly componentParentLinks: Record<string, string>;
-  /**
    * The (input) data, used as context/state for the rule and action evaluations.
    *
    * Actions can mutate this directly so that the result is used in the next rule and/or
    * action. It contains the full view on the input data. Keys may be unset/removed as
-   * part of visibility processing. See `dataUpdates` for the 'diff-only' counterpart.
+   * part of visibility processing.
    */
   data: JSONObject;
-  /**
-   * A container keeping track of the updates made to the (input) data. It only tracks
-   * the diff rather than the resulting (final) state of the data. See `data` for the
-   * 'full-data' counterpart.
-   */
-  dataUpdates: JSONObject;
   /**
    * The begin state of component values, used to populate the data for components that
    * become visible. Taken from existing submission data, the component default value
    * or the component-specific empty value (in that order).
+   *
+   * Value updates from logic rule actions can this object.
    */
-  readonly initialValues: JSONObject;
+  initialValues: JSONObject;
   /**
    * The begin state of component values without user input data, used to populate the
    * data for components that become hidden. Equal to the component default value

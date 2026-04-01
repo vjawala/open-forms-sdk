@@ -1113,6 +1113,62 @@ describe('backend regression tests', () => {
     expect(dataUpdates).toEqual({calculatedTextarea: 'client-side-visible server-side-visible'});
   });
 
+  test('#6005 - clearOnHide with component hidden by default', () => {
+    const components: AnyComponentSchema[] = [
+      {
+        type: 'checkbox',
+        key: 'checkbox',
+        id: 'checkbox',
+        label: 'Checkbox',
+      },
+      {
+        key: 'textfield',
+        id: 'textfield',
+        type: 'textfield',
+        label: 'Textfield',
+        clearOnHide: true,
+        hidden: true,
+      },
+    ];
+
+    const rules: LogicRule[] = [
+      {
+        jsonLogicTrigger: {'==': [{var: 'checkbox'}, true]},
+        actions: [
+          {
+            component: 'textfield',
+            action: {
+              type: 'property',
+              property: {type: 'bool', value: 'hidden'},
+              state: false,
+            },
+          },
+        ],
+      },
+    ];
+    const submission = buildSubmission();
+    const step: SubmissionStep = {
+      ...buildSubmissionStep({components}),
+      defaultConfiguration: {components},
+    };
+    let dataUpdates: JSONObject | null = {};
+    // Initial logic call with data `{checkbox: true}` causing the textfield to be visible
+    const inputData = {checkbox: false, textfield: 'user_input'};
+
+    evaluateBackendRules({
+      submission,
+      step,
+      rules,
+      inputData,
+      components: step.defaultConfiguration!.components ?? [],
+      onLogicCheckResult: (_, step) => {
+        dataUpdates = step.data;
+      },
+    });
+
+    expect(dataUpdates).toEqual({textfield: ''});
+  });
+
   test('#6005 - rule 1 triggers rule 2 does not, must not clear value', () => {
     const components: AnyComponentSchema[] = [
       {

@@ -2,7 +2,7 @@ import {getRegistryEntry} from '@open-formulieren/formio-renderer';
 import {getComponentsMap} from '@open-formulieren/formio-renderer/formio.js';
 import {deepMergeValues, extractInitialValues} from '@open-formulieren/formio-renderer/values.js';
 import type {AnyComponentSchema, JSONObject, JSONValue} from '@open-formulieren/types';
-import {setIn} from 'formik';
+import {getIn, setIn} from 'formik';
 import {isEqual} from 'lodash';
 
 import type {LogicRule} from '@/data/logic';
@@ -79,9 +79,9 @@ export const evaluateBackendRules = ({
   // create a deep copy that we can mutate without unexpected side-effects & derive the
   // components map from it.
   const updatedComponents = window.structuredClone(components);
-  const parentLinks: Record<string, string> = {};
-  const componentsMap = getComponentsMap(updatedComponents, parentLinks);
+  const componentsMap = getComponentsMap(updatedComponents);
   const initialValues = extractInitialValues(components, getRegistryEntry);
+  const originalInitialValues = deepMergeValues(initialValues, inputData);
 
   // Set up the evaluation state to pass through all rules and actions. It will be
   // mutated throughout the evaluation process.
@@ -89,10 +89,8 @@ export const evaluateBackendRules = ({
     ruleIsTriggered: false, // will be overriden for each rule
     currentStepUuid: step.formStepUuid,
     componentsMap,
-    componentParentLinks: parentLinks,
     data: inputData,
-    dataUpdates: {},
-    initialValues: deepMergeValues(initialValues, inputData),
+    initialValues: originalInitialValues,
     initialValuesForClearOnHide: initialValues,
     errorsToClear: [],
     disableNext: false,
@@ -103,13 +101,21 @@ export const evaluateBackendRules = ({
     evaluationState = evaluateRule(rule, evaluationState);
   }
 
-  const {
-    data: updatedData,
-    dataUpdates,
-    errorsToClear,
-    disableNext,
-    stepsApplicableUpdates,
-  } = evaluationState;
+  // component keys are the equivalent of variable keys in the client, where we don't
+  // deal with server-side only variables. Use the variable/component keys to build up
+  // the data updates structure.
+  // Only keep the keys where the final value is different from the original input
+  // values, as otherwise we risk ending up in infinite render cycles.
+  let dataUpdates: JSONObject = {};
+  for (const key of Object.keys(componentsMap)) {
+    const initialValue: JSONValue | undefined = getIn(originalInitialValues, key);
+    const currentValue: JSONValue | undefined = getIn(evaluationState.data, key);
+    if (!isEqual(currentValue, initialValue)) {
+      dataUpdates = setIn(dataUpdates, key, currentValue);
+    }
+  }
+
+  const {data: updatedData, errorsToClear, disableNext, stepsApplicableUpdates} = evaluationState;
   const canSubmit = !disableNext;
 
   const hasDataChanged = updatedData !== inputData;
