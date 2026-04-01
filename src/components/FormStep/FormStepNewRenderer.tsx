@@ -23,11 +23,12 @@ import useFormContext from '@/hooks/useFormContext';
 
 import Progress from './Progress';
 import {
-  useCheckStepLogic,
+  useCheckBackendStepLogic,
   useFormioFormConfigurationParameters,
   useLoadStep,
   useResolveStepUrl,
 } from './hooks';
+import {evaluateBackendRules} from './logic';
 import {StepState} from './utils';
 
 /**
@@ -59,17 +60,7 @@ const FormStepNewRenderer: React.FC = () => {
   const onStepLoaded = useCallback(
     (step: SubmissionStep) => {
       valuesRef.current = step.data;
-      // TODO: remove fallback once https://github.com/open-formulieren/open-forms/pull/6096 is
-      // merged
-      let components: AnyComponentSchema[];
-      if (step.configuration !== undefined) {
-        components = step.configuration.components;
-      } else if (step.formStep !== undefined) {
-        components = step.formStep.configuration.components;
-      } else {
-        throw new Error('Either toplevel `configuration` or `formStep` must be provided');
-      }
-      setComponents(components);
+      setComponents(step.configuration.components);
       setStepSubmissionAllowed(step.canSubmit);
       setDebugStepValues(step.data, true);
     },
@@ -92,17 +83,14 @@ const FormStepNewRenderer: React.FC = () => {
    * Similarly, the backend replies only with a diff of data to update, so we only need
    * to update the values if there's actually any work to do.
    */
-  const onLogicCheckResult = (updatedSubmission: Submission, updatedStep: SubmissionStep) => {
+  const onLogicCheckResult = (
+    updatedSubmission: Submission,
+    updatedStep: SubmissionStep,
+    errorsToClear: string[] = []
+  ) => {
     onSubmissionObtained(updatedSubmission);
     // update the components that may be updated by backend logic
-    let newComponents: AnyComponentSchema[];
-    if (updatedStep.configuration !== undefined) {
-      newComponents = updatedStep.configuration.components;
-    } else if (updatedStep.formStep !== undefined) {
-      newComponents = updatedStep.formStep.configuration.components;
-    } else {
-      throw new Error('Either toplevel `configuration` or `formStep` must be provided');
-    }
+    const newComponents = updatedStep.configuration.components;
     if (!isEqual(newComponents, components)) {
       setComponents(newComponents);
     }
@@ -116,8 +104,15 @@ const FormStepNewRenderer: React.FC = () => {
     if (updatedValues && Object.keys(updatedValues).length) {
       formRef.current?.updateValues(updatedValues);
     }
+
+    if (errorsToClear.length) {
+      const errorsObj: Record<string, undefined> = Object.fromEntries(
+        errorsToClear.map(key => [key, undefined])
+      );
+      formRef.current?.updateErrors(errorsObj);
+    }
   };
-  const {scheduleLogicCheck, inProgress: logicCheckInProgress} = useCheckStepLogic(
+  const {scheduleLogicCheck, inProgress: logicCheckInProgress} = useCheckBackendStepLogic(
     sparseStep.url,
     valuesRef,
     onLogicCheckResult
@@ -139,6 +134,18 @@ const FormStepNewRenderer: React.FC = () => {
   const stepState = new StepState(form, submission, formStep);
   const {previousTo, isLastStep} = stepState;
 
+  // only opt-in to the new client-side evaluation if:
+  // 1. the feature flag on the form is enabled (form-designer has opted in)
+  // 2. no logic rules require evaluation on the backend
+  // 3. the `requireBackendLogicEvaluation` flag is actually present - absence means
+  //    that an outdated API version is being used
+  //
+  // When frontend logic is enabled, the step state will not be refreshed and these
+  // references will effectively be stable and won't trigger re-renders.
+  const rules = step?.logicRules ?? [];
+  const requireBackendEvaluation =
+    !form.newLogicEvaluationEnabled || (step?.requireBackendLogicEvaluation ?? true);
+
   return (
     <LiteralsProvider literals={formStep.literals}>
       <Card title={form.name} mobileHeaderHidden>
@@ -155,7 +162,19 @@ const FormStepNewRenderer: React.FC = () => {
             values={step!.data ?? undefined}
             onChange={values => {
               valuesRef.current = values;
-              scheduleLogicCheck();
+              if (requireBackendEvaluation) {
+                scheduleLogicCheck();
+              } else {
+                if (!step) throw new Error('Step must be resolved.');
+                evaluateBackendRules({
+                  submission,
+                  step: step,
+                  rules,
+                  inputData: values,
+                  components: step.defaultConfiguration?.components ?? [],
+                  onLogicCheckResult,
+                });
+              }
               setDebugStepValues(values, false);
             }}
             onSubmit={async values => {

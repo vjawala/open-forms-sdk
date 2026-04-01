@@ -63,18 +63,11 @@ const SUBMISSION_STEP_DETAILS = {
   id: '58aad9c3-29c7-4568-9047-3ac7ceb0f0ff',
   slug: 'step-1',
   formStepUuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
-  formStep: {
-    uuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
-    index: 0,
-    configuration: DEFAULT_FORMIO_CONFIGURATION,
-  },
   configuration: DEFAULT_FORMIO_CONFIGURATION,
   defaultConfiguration: null,
   requireBackendLogicEvaluation: true,
   logicRules: [],
   data: null,
-  isApplicable: true,
-  completed: false,
   canSubmit: true,
 } satisfies SubmissionStep;
 
@@ -116,27 +109,27 @@ export const buildSubmissionStep = ({
     id: '6ca342af-86c7-451c-a19f-65050b2eee5c',
     slug: 'step-1',
     formStepUuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
-    // legacy
-    formStep: {
-      uuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
-      index: 0,
-      configuration: formioConfiguration,
-    },
     configuration: formioConfiguration,
     defaultConfiguration: null,
     requireBackendLogicEvaluation: true,
     logicRules: [],
     data: data,
-    isApplicable: true,
-    completed: false,
     canSubmit,
   } satisfies SubmissionStep;
 };
 
-export const mockSubmissionStepGet = (stepDetails: SubmissionStep = SUBMISSION_STEP_DETAILS) =>
-  http.get(`${BASE_URL}submissions/:uuid/steps/:stepUuid`, () => {
-    return HttpResponse.json(stepDetails, {status: 200});
-  });
+export const mockSubmissionStepGet = (
+  stepDetails: SubmissionStep | undefined = SUBMISSION_STEP_DETAILS,
+  stepDetailsMap?: Record<string, SubmissionStep>
+) =>
+  http.get<{uuid: string; stepUuid: string}>(
+    `${BASE_URL}submissions/:uuid/steps/:stepUuid`,
+    ({params}) => {
+      const {stepUuid} = params;
+      const stepDetailsResponse = stepDetailsMap ? stepDetailsMap[stepUuid] : stepDetails;
+      return HttpResponse.json(stepDetailsResponse, {status: 200});
+    }
+  );
 
 export const mockSubmissionStepValidatePost = (
   errors: Record<string, string> | undefined = undefined

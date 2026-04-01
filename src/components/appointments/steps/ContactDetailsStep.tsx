@@ -113,7 +113,6 @@ const ContactDetailsStep: React.FC<ContactDetailsStepProps> = ({navigateTo = ''}
           <FormioForm
             components={components}
             values={stepData?.contactDetails}
-            // @ts-expect-error the Errors type in our renderer needs to support undefined
             errors={initialErrors?.contactDetails}
             onSubmit={async values => {
               flushSync(() => {

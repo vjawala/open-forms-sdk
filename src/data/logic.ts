@@ -1,4 +1,4 @@
-import type {JSONObject, JSONValue} from '@open-formulieren/types';
+import type {JSONValue} from '@open-formulieren/types';
 
 /**
  * Action that assigns a variable value.
@@ -135,13 +135,14 @@ export type LogicAction =
 export interface LogicRule {
   /**
    * The trigger expression for the rule. It's a JsonLogic expression that will be
-   * evaluated with the current variables context.
+   * evaluated with the current variables context. The expression *can* also be an
+   * already evaluated expression result, or partial expression.
    *
    * @see {@Link https://jsonlogic.com/} for the JsonLogic reference.
    * @note Open Forms extends JsonLogic with its own set of operators, see `src/logic`
    * for details.
    */
-  jsonLogicTrigger: JSONObject;
+  jsonLogicTrigger: JSONValue;
   /**
    * Collection of logic actions to execute when the trigger evaluates to truthy.
    *

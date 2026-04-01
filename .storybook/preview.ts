@@ -27,7 +27,7 @@ import {
   withModalDecorator,
   withUtrechtDocument,
 } from './decorators';
-import {allModes} from './modes.mjs';
+import {allModes} from './modes';
 import {reactIntl} from './reactIntl.mjs';
 
 window._ = lodash;

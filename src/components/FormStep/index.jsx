@@ -115,9 +115,7 @@ const reducer = (draft, action) => {
   switch (action.type) {
     case 'STEP_LOADED': {
       const step = action.payload;
-      // TODO: remove fallback once https://github.com/open-formulieren/open-forms/pull/6096
-      // is merged.
-      draft.configuration = step.configuration ?? step.formStep.configuration;
+      draft.configuration = step.configuration;
       draft.backendData = step.data;
       draft.formioInitialized = false;
       draft.canSubmit = step.canSubmit;
@@ -283,10 +281,7 @@ const FormStep = () => {
       type: 'STEP_LOADED',
       payload: stepDetail,
     });
-    // 3.5.0+ exposes `configuration` at the top level
-    // TODO: remove fallback once https://github.com/open-formulieren/open-forms/pull/6096
-    // is merged.
-    configurationRef.current = stepDetail.configuration ?? stepDetail.formStep.configuration;
+    configurationRef.current = stepDetail.configuration;
     window.scrollTo(0, 0, {behavior: 'smooth'});
   }, [submissionStep.url]);
 
@@ -425,10 +420,7 @@ const FormStep = () => {
       // definition by using the ref to the underlying Formio instance.
       // NOTE that this does effectively bring our state.configuration out of sync
       // with the actual form configuration (!).
-      // 3.5.0+ exposes `configuration` at the top level
-      // TODO: remove fallback once https://github.com/open-formulieren/open-forms/pull/6096
-      // is merged.
-      const newConfiguration = step.configuration ?? step.formStep.configuration;
+      const newConfiguration = step.configuration;
       const previousConfiguration = configurationRef.current;
       const configurationChanged =
         previousConfiguration && !isEqual(previousConfiguration, newConfiguration);
