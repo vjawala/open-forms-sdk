@@ -4,7 +4,7 @@ import {ZodIssueCode, ZodParsedType, util, z} from 'zod';
 export const makeZodErrorMap = (intl: IntlShape): z.ZodErrorMap => {
   // taken and adapted from https://github.com/colinhacks/zod/blob/master/src/locales/en.ts
   const errorMap: z.ZodErrorMap = (issue, ctx) => {
-    let message;
+    let message: string | React.ReactNode;
 
     switch (issue.code) {
       case ZodIssueCode.invalid_type:
@@ -350,7 +350,9 @@ export const makeZodErrorMap = (intl: IntlShape): z.ZodErrorMap => {
         message = ctx.defaultError;
         util.assertNever(issue);
     }
-    return {message};
+    // Zod is not aware of React types, while intl.formatMessage can return React Nodes.
+    // The error render fine, so we can downcast here.
+    return {message: message as string};
   };
 
   return errorMap;
