@@ -1,4 +1,4 @@
-import {Alert} from '@utrecht/component-library-react';
+import {Alert, Icon as UtrechtIcon} from '@utrecht/component-library-react';
 
 import useScrollIntoView from '@/hooks/useScrollIntoView';
 
@@ -37,7 +37,12 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
   const errorRef = useScrollIntoView<HTMLDivElement>(noScrollIntoView);
   if (!children) return null;
   return (
-    <Alert type={level} icon={ICONS[level]} ref={errorRef} {...ARIA_TAGS[level]}>
+    <Alert
+      type={level}
+      icon={<UtrechtIcon>{ICONS[level]}</UtrechtIcon>}
+      ref={errorRef}
+      {...ARIA_TAGS[level]}
+    >
       {children}
     </Alert>
   );

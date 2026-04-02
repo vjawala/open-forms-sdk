@@ -52,7 +52,9 @@ class SoftRequiredErrors extends FormioContentField {
         role="status"
       >
         <div class="utrecht-alert__icon">
-          <i class="fa fas fa-exclamation-triangle"></i>
+          <span class="utrecht-icon" role="presentation" aria-hidden="true">
+            <i class="fa fas fa-exclamation-triangle"></i>
+          </span>
         </div>
         <div class="utrecht-alert__message">
           ${content}
