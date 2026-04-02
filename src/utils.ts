@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import type {IntlShape} from 'react-intl';
 
 import {getEnv} from './env';

@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {Formio} from 'react-formio';
 
 import {applyPrefix} from 'utils';

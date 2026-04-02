@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useLocation} from 'react-router';
 
