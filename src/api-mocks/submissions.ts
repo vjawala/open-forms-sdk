@@ -2,6 +2,7 @@ import type {AnyComponentSchema, JSONObject} from '@open-formulieren/types';
 import {HttpResponse, http} from 'msw';
 
 import type {FormioConfiguration} from '@/data/formio';
+import type {LogicRule} from '@/data/logic';
 import type {SubmissionStep} from '@/data/submission-steps';
 import type {Submission} from '@/data/submissions';
 import type {InvalidParam} from '@/errors';
@@ -94,6 +95,9 @@ interface BuildSubmissionStepOpts {
   components?: AnyComponentSchema[];
   data?: JSONObject | null;
   canSubmit?: boolean;
+  formStepUuid?: string;
+  requireBackendLogicEvaluation?: boolean;
+  logicRules?: LogicRule[];
 }
 
 /**
@@ -103,17 +107,20 @@ export const buildSubmissionStep = ({
   components = SUBMISSION_STEP_DETAILS.configuration.components,
   data = null,
   canSubmit = true,
+  formStepUuid = 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
+  requireBackendLogicEvaluation = true,
+  logicRules = [],
 }: BuildSubmissionStepOpts): SubmissionStep => {
   const formioConfiguration: FormioConfiguration = {type: 'form', components};
   return {
     id: '6ca342af-86c7-451c-a19f-65050b2eee5c',
     slug: 'step-1',
-    formStepUuid: 'f31e0bbb-0ad9-4dde-bb2c-9360c606f980',
+    formStepUuid,
     configuration: formioConfiguration,
-    defaultConfiguration: null,
-    requireBackendLogicEvaluation: true,
-    logicRules: [],
-    data: data,
+    defaultConfiguration: requireBackendLogicEvaluation ? null : formioConfiguration,
+    requireBackendLogicEvaluation,
+    logicRules,
+    data,
     canSubmit,
   } satisfies SubmissionStep;
 };

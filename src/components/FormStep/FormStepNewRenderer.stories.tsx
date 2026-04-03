@@ -264,6 +264,85 @@ export const DisableStepSubmissionWithServerLogic: Story = {
   },
 };
 
+const FRONTEND_LOGIC_STEP_DETAIL_BODY = buildSubmissionStep({
+  formStepUuid: '9e6eb3c5-e5a4-4abf-b64a-73d3243f2bf5',
+  components: [
+    {
+      id: 'checkbox',
+      type: 'checkbox',
+      key: 'checkbox',
+      label: 'Checkbox',
+      defaultValue: true,
+    },
+  ],
+  requireBackendLogicEvaluation: false,
+  logicRules: [
+    {
+      jsonLogicTrigger: {'==': [{var: 'checkbox'}, true]},
+      actions: [
+        {formStepUuid: '9e6eb3c5-e5a4-4abf-b64a-73d3243f2bf5', action: {type: 'disable-next'}},
+      ],
+    },
+  ],
+  canSubmit: true,
+  data: {},
+});
+
+export const DisableStepSubmissionWithFrontendLogic: Story = {
+  parameters: {
+    msw: {
+      handlers: {
+        submissionStep: [
+          mockSubmissionStepGet(FRONTEND_LOGIC_STEP_DETAIL_BODY),
+          mockSubmissionStepPut(FRONTEND_LOGIC_STEP_DETAIL_BODY, 201),
+        ],
+        logicCheck: [
+          // @ts-expect-error Return nonsense data on purpose, to make sure a crash will occur if
+          // a backend logic check was scheduled anyway.
+          mockSubmissionCheckLogicPost('nonsense', 'data'),
+        ],
+      },
+    },
+    formContext: {
+      form: buildForm({
+        newLogicEvaluationEnabled: true,
+        steps: [
+          {
+            uuid: '9e6eb3c5-e5a4-4abf-b64a-73d3243f2bf5',
+            slug: 'step-1',
+            formDefinition: 'Step 1',
+            index: 0,
+            literals: {
+              previousText: {resolved: 'Previous', value: ''},
+              saveText: {resolved: 'Save', value: ''},
+              nextText: {resolved: 'Next', value: ''},
+            },
+            url: `${BASE_URL}forms/mock/steps/9e6eb3c5-e5a4-4abf-b64a-73d3243f2bf5`,
+          },
+        ],
+      }),
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    // Initial state of the checkbox must be checked.
+    const checkbox = await canvas.findByLabelText('Checkbox');
+    expect(checkbox).toBeChecked();
+
+    // This ensures (frontend) logic was invoked upon loading the step, because a step can be
+    // submitted by default, but the is checked by default causing the rule to be triggered.
+    const nextButton = await canvas.findByRole('button', {name: 'Next'});
+    waitFor(() => {
+      expect(nextButton).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    // Unchecking the checkbox should allow step submission again.
+    await userEvent.click(checkbox);
+    expect(nextButton).toHaveAttribute('aria-disabled', 'false');
+  },
+};
+
 export const NextButtonDisabledInitially: Story = {
   parameters: {
     msw: {
