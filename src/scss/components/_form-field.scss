@@ -1,5 +1,12 @@
 @use 'microscope-sass/lib/bem';
 
+// Needs to be repeated so that it's output *after* the utrecht-paragraph styles. The
+// previously included stylesheets have competing rules in .utrecht-paragraph and
+// .utrecht-form-field__label, where the former appears after the latter.
+.utrecht-form-field__label {
+  margin-block-end: var(--utrecht-form-field-label-margin-block-end);
+}
+
 // Proper alignment of verify button and email input
 .utrecht-form-field {
   @include bem.modifier('has-button') {

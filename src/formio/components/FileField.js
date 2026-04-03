@@ -41,6 +41,7 @@ const CSRFEnabledUrl = function (formio) {
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           // Need to test if xhr.response is decoded or not.
+          // eslint-disable-next-line no-useless-assignment
           let respData = {};
           try {
             respData = typeof xhr.response === 'string' ? JSON.parse(xhr.response) : {};

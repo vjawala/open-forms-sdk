@@ -1,5 +1,5 @@
 import {ButtonLink, Link} from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 
 export const ANCHOR_MODIFIERS = [
   // maps to NLDS

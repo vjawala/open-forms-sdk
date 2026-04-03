@@ -5,8 +5,6 @@
  * @open-formulieren/formio-renderer stylesheet. The @use rule should avoid this being
  * duplicated.
  */
-@use '@utrecht/button-group-css';
-
 @include mobile-only {
   .openforms-theme {
     .utrecht-button-group {

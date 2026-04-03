@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 
 export const VARIANTS = ['big', 'muted', 'small', 'wysiwyg'] as const;
 export type Variant = (typeof VARIANTS)[number];

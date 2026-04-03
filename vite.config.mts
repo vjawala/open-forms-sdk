@@ -219,6 +219,7 @@ export default defineConfig(({mode}) => {
           additionalData: `$fa-font-path: '@fortawesome/fontawesome-free/webfonts/';`,
           charset: false,
           quietDeps: true,
+          api: 'modern',
           silenceDeprecations: ['import', 'mixed-decls'],
         },
       },

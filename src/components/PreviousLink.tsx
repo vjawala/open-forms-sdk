@@ -1,5 +1,5 @@
 import {Icon} from '@utrecht/component-library-react';
-import clsx from 'clsx';
+import {clsx} from 'clsx';
 
 import FAIcon from '@/components/FAIcon';
 import Link from '@/components/Link';
