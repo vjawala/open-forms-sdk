@@ -11,8 +11,6 @@
     "./open-forms-sdk.mjs": "./dist/bundles/open-forms-sdk.mjs",
     "./styles.css": "./dist/bundles/open-forms-sdk.css",
     "./bundles/*": "./dist/bundles/*",
-    "./formio-module": "./dist/formio/module.js",
-    "./formio-templates": "./dist/formio/templates/library.js",
     "./components/*": "./dist/components/*",
     "./hooks/*": "./dist/hooks/*",
     "./errors": "./dist/errors.js",
@@ -34,11 +32,9 @@
   "dependencies": {
     "@date-fns/tz": "^1.4.1",
     "@floating-ui/react": "^0.27.5",
-    "@formio/protected-eval": "^1.2.1",
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@open-formulieren/design-tokens": "^0.66.0",
     "@open-formulieren/formio-renderer": "^1.5.1",
-    "@open-formulieren/formiojs": "^4.13.14",
     "@open-formulieren/leaflet-tools": "^1.0.0",
     "@sentry/react": "^8.50.0",
     "clsx": "^2.1.1",
@@ -57,7 +53,6 @@
     "moment": "^2.29.1",
     "nuqs": "^2.8.6",
     "proj4leaflet": "^1.0.2",
-    "react-formio": "^4.3.0",
     "react-intl": "^7.1.14",
     "react-leaflet": "4.2.1",
     "react-leaflet-draw": "^0.20.6",
@@ -186,9 +181,6 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.18",
     "yargs": "^18.0.0"
-  },
-  "overrides": {
-    "formiojs": "npm:@open-formulieren/formiojs@4.13.14"
   },
   "babel": {
     "presets": [
