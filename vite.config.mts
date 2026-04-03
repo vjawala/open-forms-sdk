@@ -14,7 +14,7 @@ import eslint from 'vite-plugin-eslint2';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import {coverageConfigDefaults, defineConfig} from 'vitest/config';
 
-import {cjsTokens, ejsPlugin} from './build/plugins.mjs';
+import {cjsTokens} from './build/plugins.mjs';
 import {packageRegexes} from './build/utils.mjs';
 
 // type definition for our custom envvars
@@ -120,19 +120,6 @@ export default defineConfig(({mode}) => {
         emitErrorAsWarning: mode === 'development',
       }),
       cjsTokens(),
-      ejsPlugin(),
-      // @formio/protected-eval requires js-interpeter (a forked version), which includes
-      // this['Interpreter'] = Interpreter. When this is bundled, it becomes a strict module
-      // and 'this' doesn't point to the window object, but is undefined, and causes the SDK
-      // to crash.
-      replace({
-        preventAssignment: false,
-        include: ['**/node_modules/js-interpreter/interpreter.js'],
-        delimiters: ['', ''],
-        values: {
-          "this\['Interpreter'\]": "window['Interpreter']",
-        },
-      }),
       buildTarget === 'esm'
         ? dts({tsconfigPath: './tsconfig.prod.json'})
         : dts({
