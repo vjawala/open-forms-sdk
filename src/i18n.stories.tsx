@@ -3,10 +3,6 @@ import type {Meta, StoryObj} from '@storybook/react-vite';
 import {useIntl} from 'react-intl';
 import {fn} from 'storybook/test';
 
-import {
-  mockFormioTranslations,
-  mockFormioTranslationsServiceUnavailable,
-} from '@/components/LanguageSelection/mocks';
 import {I18NErrorBoundary, I18NManager, setLanguage} from '@/i18n';
 
 import {mockCustomStaticTranslationsNullGet} from './api-mocks';
@@ -19,7 +15,7 @@ export default {
     onLanguageChangeDone: fn(),
   },
   parameters: {
-    msw: {handlers: [mockFormioTranslations]},
+    msw: {handlers: []},
     controls: {hideNoControlsWarning: true},
   },
   argTypes: {
@@ -54,7 +50,6 @@ export const Default: Story = {
   parameters: {
     msw: {
       handlers: [
-        mockFormioTranslations,
         mockCustomStaticTranslationsNullGet('en'),
         mockCustomStaticTranslationsNullGet('nl'),
       ],
@@ -79,7 +74,6 @@ export const WithError: Story = {
   parameters: {
     msw: {
       handlers: [
-        mockFormioTranslationsServiceUnavailable,
         mockCustomStaticTranslationsNullGet('en'),
         mockCustomStaticTranslationsNullGet('nl'),
       ],

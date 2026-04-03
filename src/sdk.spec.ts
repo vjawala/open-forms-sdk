@@ -9,7 +9,7 @@ import {
 } from '@/api-mocks';
 import mswServer from '@/api-mocks/msw-server';
 import type {LanguageInfo} from '@/components/LanguageSelection/LanguageSelection';
-import {mockFormioTranslations, mockLanguageInfoGet} from '@/components/LanguageSelection/mocks';
+import {mockLanguageInfoGet} from '@/components/LanguageSelection/mocks';
 
 import {OpenForm} from './sdk';
 
@@ -25,7 +25,6 @@ const LANGUAGES: LanguageInfo['languages'] = [
 const apiMocks = [
   mockFormGet(buildForm({translationEnabled: true})),
   mockLanguageInfoGet(LANGUAGES),
-  mockFormioTranslations,
   mockAnalyticsToolConfigGet(),
   mockCustomStaticTranslationsNullGet('en'),
   mockCustomStaticTranslationsNullGet('nl'),
@@ -103,7 +102,6 @@ describe('OpenForm', () => {
       mockFormGet(formNL, true),
       mockFormGet(formEN, true),
       mockLanguageInfoGet(LANGUAGES),
-      mockFormioTranslations,
       mockAnalyticsToolConfigGet(),
       mockCustomStaticTranslationsNullGet('nl'),
       mockCustomStaticTranslationsNullGet('en')

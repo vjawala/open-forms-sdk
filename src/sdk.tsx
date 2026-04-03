@@ -1,6 +1,5 @@
 import FormSettingsProvider from '@open-formulieren/formio-renderer/components/FormSettingsProvider.js';
 import type {AnyComponentSchema, SupportedLocales} from '@open-formulieren/types';
-import 'flatpickr';
 import {NuqsAdapter} from 'nuqs/adapters/react-router/v7';
 import React from 'react';
 import {type Root, createRoot} from 'react-dom/client';
@@ -20,10 +19,6 @@ import {DEBUG, getVersion} from '@/utils';
 
 import {type Action as RoutingAction, getRedirectParams} from './routingActions';
 import './styles.scss';
-
-// asynchronously 'pre-load' our formio initialization so that this can be split off
-// from the main bundle into a separate chunk.
-import('./formio-init');
 
 const VERSION = getVersion();
 

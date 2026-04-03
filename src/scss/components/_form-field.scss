@@ -6,15 +6,3 @@
 .utrecht-form-field__label {
   margin-block-end: var(--utrecht-form-field-label-margin-block-end);
 }
-
-// Proper alignment of verify button and email input
-.utrecht-form-field {
-  @include bem.modifier('has-button') {
-    div[ref='element'],
-    .openforms-multi-value-row__input {
-      display: flex;
-      flex-direction: column;
-      gap: var(--of-utrecht-form-field-with-button-gap, 10px);
-    }
-  }
-}

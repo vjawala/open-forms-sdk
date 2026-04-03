@@ -12,8 +12,6 @@ $fa-font-path: '../webfonts/' !default; // vite.config.mts overrides this
 @use '@fortawesome/fontawesome-free/scss/solid' with (
   $fa-font-path: $fa-font-path
 );
-@use 'flatpickr/dist/flatpickr.min';
-@use 'formiojs/dist/formio.form';
 @use 'leaflet/dist/leaflet';
 @use '@open-formulieren/formio-renderer/formio-renderer.css';
 
@@ -37,32 +35,21 @@ $fa-font-path: '../webfonts/' !default; // vite.config.mts overrides this
 @import './scss/components/button-group';
 @import './scss/components/card';
 @import './scss/components/children';
-@import './scss/components/content';
 @import './scss/components/data-list';
-@import './scss/components/errors';
-@import './scss/components/formio-component';
 @import './scss/components/image';
 @import './scss/components/form-field';
-@import './scss/components/form-field-container';
 @import './scss/components/form-navigation';
 @import './scss/components/input';
 @import './scss/components/label';
 @import './scss/components/list';
-@import './scss/components/deprecated-select';
 @import './scss/components/textarea';
-@import './scss/components/tooltip';
-@import './scss/components/loading';
 @import './scss/components/progress-indicator';
 @import './scss/components/previous-link';
 @import './scss/components/summary-progress';
-@import './scss/components/file-upload';
 @import './scss/components/columns';
 @import './scss/components/price';
-@import './scss/components/multi-value-row';
-@import './scss/components/multi-value-table';
 @import './scss/components/co-sign';
 @import './scss/components/leaflet-map';
-@import './scss/components/signature';
 @import './scss/components/start-link';
 @import './scss/components/summary';
 @import './scss/components/language-selection';
@@ -70,5 +57,3 @@ $fa-font-path: '../webfonts/' !default; // vite.config.mts overrides this
 @import './scss/components/login-button';
 @import './scss/components/authentication-errors';
 @import './scss/components/govmetric_snippet';
-// TODO: obsolete when formio.js is removed
-@import './scss/components/soft-required-errors';

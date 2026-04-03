@@ -16,11 +16,7 @@ import {
   mockSubmissionPost,
   mockSubmissionStepGet,
 } from '@/api-mocks/submissions';
-import {
-  mockFormioTranslations,
-  mockLanguageChoicePut,
-  mockLanguageInfoGet,
-} from '@/components/LanguageSelection/mocks';
+import {mockLanguageChoicePut, mockLanguageInfoGet} from '@/components/LanguageSelection/mocks';
 import type {Form, MinimalFormStep} from '@/data/forms';
 import type {Submission} from '@/data/submissions';
 import {I18NManager, setLanguage} from '@/i18n';
@@ -210,7 +206,6 @@ export const WithCustomNLTranslations: Story = {
       handlers: [
         mockCustomStaticTranslationsGet('en'),
         mockCustomStaticTranslationsGet('nl'),
-        mockFormioTranslations,
         mockLanguageInfoGet([
           {code: 'nl', name: 'Nederlands'},
           {code: 'en', name: 'English'},
@@ -254,7 +249,6 @@ export const WithCustomENTranslations: Story = {
       handlers: [
         mockCustomStaticTranslationsGet('en'),
         mockCustomStaticTranslationsGet('nl'),
-        mockFormioTranslations,
         mockLanguageInfoGet([
           {code: 'nl', name: 'Nederlands'},
           {code: 'en', name: 'English'},

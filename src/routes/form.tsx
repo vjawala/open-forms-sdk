@@ -3,7 +3,7 @@ import type {RouteObject} from 'react-router';
 import ErrorBoundary from '@/components/Errors/ErrorBoundary';
 import FormLandingPage from '@/components/FormLandingPage';
 import FormStart from '@/components/FormStart';
-import FormStepWrapper from '@/components/FormStep/FormStepWrapper';
+import FormStepNewRenderer from '@/components/FormStep/FormStepNewRenderer';
 import IntroductionPage from '@/components/IntroductionPage';
 import {ConfirmationView, StartPaymentView} from '@/components/PostCompletionViews';
 import RequireSubmission from '@/components/RequireSubmission';
@@ -33,7 +33,7 @@ const routes: RouteObject[] = [
       <ErrorBoundary useCard>
         <SessionTrackerModal>
           <RequireSubmission>
-            <FormStepWrapper />
+            <FormStepNewRenderer />
           </RequireSubmission>
         </SessionTrackerModal>
       </ErrorBoundary>

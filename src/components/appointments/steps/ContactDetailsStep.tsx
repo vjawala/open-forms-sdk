@@ -6,7 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl';
 import {Navigate, useNavigate} from 'react-router';
 import {useAsync} from 'react-use';
 
-import {ConfigContext, FormioTranslations, type LanguageCode} from '@/Context';
+import {ConfigContext, type LanguageCode} from '@/Context';
 import {get} from '@/api';
 import {getCached, setCached} from '@/cache';
 import {CardTitle} from '@/components/Card';
@@ -49,7 +49,7 @@ export interface ContactDetailsStepProps {
 const ContactDetailsStep: React.FC<ContactDetailsStepProps> = ({navigateTo = ''}) => {
   const intl = useIntl();
   const {baseUrl, requiredFieldsWithAsterisk} = useContext(ConfigContext);
-  const {language} = useContext(FormioTranslations);
+  const language = intl.locale;
   const {
     submitStep,
     appointmentData,
