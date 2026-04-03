@@ -8,6 +8,5 @@
     "**/*.spec.*",
     "src/vitest.setup.mts",
     "src/api-mocks/**/*",
-    "src/jstests/**/*",
   ]
 }
