@@ -8,6 +8,7 @@ const externalPackages = [
   '@formio/vanilla-text-mask',
   '@babel/runtime',
   '@utrecht/component-library-react',
+  '@utrecht/button-group-react',
 ];
 
 // Creating regexes of the packages to make sure subpaths of the
