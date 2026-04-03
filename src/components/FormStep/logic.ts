@@ -115,21 +115,8 @@ export const evaluateBackendRules = ({
     }
   }
 
-  const {data: updatedData, errorsToClear, disableNext, stepsApplicableUpdates} = evaluationState;
+  const {errorsToClear, disableNext, stepsApplicableUpdates} = evaluationState;
   const canSubmit = !disableNext;
-
-  const hasDataChanged = updatedData !== inputData;
-  const hasComponentConfigurationChanged = !isEqual(components, updatedComponents);
-  const hasStepsApplicableUpdates = Object.keys(stepsApplicableUpdates).length > 0;
-
-  if (
-    !hasDataChanged &&
-    !hasComponentConfigurationChanged &&
-    !errorsToClear.length &&
-    !canSubmit &&
-    !hasStepsApplicableUpdates
-  )
-    return;
 
   let updatedStep: SubmissionStep = setIn(step, 'configuration.components', updatedComponents);
   updatedStep = setIn(updatedStep, 'data', dataUpdates);
