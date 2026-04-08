@@ -1255,6 +1255,16 @@
       "value": " zijn."
     }
   ],
+  "GaibEj": [
+    {
+      "type": 0,
+      "value": "The maximum amount of persons for this product is "
+    },
+    {
+      "type": 1,
+      "value": "maxAmount"
+    }
+  ],
   "GbPef0": [
     {
       "type": 0,

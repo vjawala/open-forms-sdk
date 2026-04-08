@@ -348,6 +348,11 @@
     "description": "Email verification modal: warning that no email is specified",
     "originalDefault": "You haven't entered an email address yet."
   },
+  "GaibEj": {
+    "defaultMessage": "The maximum amount of persons for this product is {maxAmount}",
+    "description": "Amount limit exceeded error message",
+    "originalDefault": "The maximum amount of persons for this product is {maxAmount}"
+  },
   "GbPef0": {
     "defaultMessage": "Huisnummer is verplicht.",
     "description": "ZOD error message when AddressNL postcode is provided but not houseNumber",

@@ -22,7 +22,7 @@ export default {
     },
   },
   args: {
-    products: [{productId: 'e8e045ab', amount: 1}],
+    products: [{productId: 'e8e045ab', amount: 1, amountLimit: 0}],
   },
 } satisfies Meta<typeof DateSelect>;
 

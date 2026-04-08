@@ -13,6 +13,7 @@ export interface Product {
   identifier: string;
   name: string;
   description: string;
+  amountLimit: number;
 }
 
 /**
@@ -55,6 +56,12 @@ export interface AppointmentProduct {
    */
   productId: string;
   amount: number;
+  /**
+   * The maximum amount of the allowed persons for a product.
+   *
+   * This has a default to zero if it's not known (no limit).
+   */
+  amountLimit: number;
 }
 
 type StatementValues = Partial<Record<SubmissionStatementConfiguration['key'], boolean>>;

@@ -13,6 +13,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     code: 'PASAAN',
     identifier: '166a5c79',
     name: 'Paspoort aanvraag',
+    amountLimit: 0,
     description:
       '<p>An example of extra description</p>\r\n<ul>\r\n<li>First choice</li>\r\n<li>Another choice</li>\r\n<p>Attention: some notes</p>',
   },
@@ -20,12 +21,14 @@ const DEFAULT_PRODUCTS: Product[] = [
     code: 'RIJAAN',
     identifier: 'e8e045ab',
     name: 'Rijbewijs aanvraag (Drivers license)',
+    amountLimit: 3,
     description: '',
   },
   {
     code: 'LIMITED',
     identifier: 'ea04db83',
     name: 'Not available with drivers license',
+    amountLimit: 0,
     description: '',
   },
 ];

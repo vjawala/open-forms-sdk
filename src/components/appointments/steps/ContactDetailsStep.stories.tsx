@@ -24,8 +24,8 @@ export default {
       appointmentData: {
         producten: {
           products: [
-            {productId: '166a5c79', amount: 1},
-            {productId: 'e8e045ab', amount: 2},
+            {productId: '166a5c79', amount: 1, amountLimit: 0},
+            {productId: 'e8e045ab', amount: 2, amountLimit: 0},
           ],
         },
         kalender: {
@@ -86,7 +86,7 @@ export const WithBackendErrors: Story = {
       currentStep: 'contactgegevens',
       appointmentData: {
         producten: {
-          products: [{productId: '166a5c79', amount: 1}],
+          products: [{productId: '166a5c79', amount: 1, amountLimit: 0}],
         },
         kalender: {
           location: '1396f17c',

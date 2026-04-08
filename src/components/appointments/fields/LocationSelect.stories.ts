@@ -21,7 +21,7 @@ export default {
     },
   },
   args: {
-    products: [{productId: 'e8e045ab', amount: 1}],
+    products: [{productId: 'e8e045ab', amount: 1, amountLimit: 0}],
   },
 } satisfies Meta<typeof LocationSelect>;
 
@@ -47,8 +47,8 @@ export const SingleCandidate: Story = {
   name: 'Single candidate location',
   args: {
     products: [
-      {productId: 'e8e045ab', amount: 1},
-      {productId: '166a5c79', amount: 1},
+      {productId: 'e8e045ab', amount: 1, amountLimit: 0},
+      {productId: '166a5c79', amount: 1, amountLimit: 0},
     ],
   },
   play: async ({canvasElement}) => {

@@ -12,10 +12,12 @@ const PRODUCTS_DATA: AppointmentProduct[] = [
   {
     productId: '166a5c79',
     amount: 2,
+    amountLimit: 0,
   },
   {
     productId: 'e8e045ab',
     amount: 1,
+    amountLimit: 0,
   },
 ];
 
