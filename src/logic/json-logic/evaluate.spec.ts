@@ -35,3 +35,37 @@ test('evaluate returns serialized results by default', () => {
 
   expect(typeof result).toBe('string');
 });
+
+test('evaluate with data that also includes a valid json logic operator', () => {
+  const expression = {
+    '==': [[{var: 'foo', some: 'data'}, 'a'], []],
+  };
+  const data = {};
+
+  // Interpreted as data, so the expression evaluates to false.
+  const result = evaluate(expression, data);
+  expect(result).toBe(false);
+});
+
+test('evaluate throws with more than two arguments for comparison operator', () => {
+  const expression = {
+    '==': [1, 2, 3],
+  };
+  const data = {};
+
+  // Mimics the backend behavior.
+  expect(() => evaluate(expression, data)).toThrow();
+});
+
+test('evaluate with data that only includes a valid json logic operator', () => {
+  // Consider an editgrid with a textfield named "map". Its data was substituted by the backend
+  // resulting in the following expression:
+  const expression = {
+    '==': [[{map: 'a'}, {map: 'b'}], []],
+  };
+  const data = {};
+
+  // Even though we are dealing with data here, we have lost the context by partially evaluating
+  // the expression, so it gets interpreted as a JSON logic "map" operation.
+  expect(() => evaluate(expression, data)).toThrow();
+});
