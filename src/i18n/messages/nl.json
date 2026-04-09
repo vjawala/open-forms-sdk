@@ -414,6 +414,11 @@
     "description": "Appointments products step title",
     "originalDefault": "Select your product(s)"
   },
+  "J2bTRy": {
+    "defaultMessage": "The maximum amount of persons for this product is {maxAmount}.",
+    "description": "Amount limit exceeded error message",
+    "originalDefault": "The maximum amount of persons for this product is {maxAmount}."
+  },
   "JB/IBw": {
     "defaultMessage": "De betaling is mislukt. Indien je de betaling afgebroken hebt, gebruik dan de betaallink in de bevestigingsmail om deze alsnog te voltooien.",
     "description": "payment failed status",

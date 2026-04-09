@@ -27,6 +27,7 @@ export default {
             {
               productId: '',
               amount: 1,
+              amountLimit: 0,
             },
           ],
         },
@@ -67,6 +68,7 @@ export const AddingProducts: Story = {
             {
               productId: '166a5c79',
               amount: 2,
+              amountLimit: 0,
             },
           ],
         },
@@ -93,10 +95,12 @@ export const RemovingProducts: Story = {
             {
               productId: '166a5c79',
               amount: 2,
+              amountLimit: 0,
             },
             {
               productId: 'e8e045ab',
               amount: 1,
+              amountLimit: 0,
             },
           ],
         },
@@ -146,7 +150,7 @@ export const WithBackendErrors: Story = {
       currentStep: 'producten',
       appointmentData: {
         producten: {
-          products: [{productId: '166a5c79', amount: 1}],
+          products: [{productId: '166a5c79', amount: 1, amountLimit: 0}],
         },
       } satisfies Partial<AppointmentDataByStep>,
       appointmentErrors: {
@@ -161,5 +165,32 @@ export const WithBackendErrors: Story = {
     expect(await canvas.findByText('Product is sold out.')).toBeVisible();
     const submitButton = canvas.getByRole('button', {name: 'Bevestig producten'});
     expect(submitButton).not.toHaveAttribute('aria-disabled', 'true');
+  },
+};
+
+export const WithFrontendErrors: Story = {
+  name: 'Display frontend errors',
+  parameters: {
+    appointmentState: {
+      currentStep: 'producten',
+      appointmentData: {
+        producten: {
+          products: [{productId: 'e8e045ab', amount: 5, amountLimit: 3}],
+        },
+      } satisfies Partial<AppointmentDataByStep>,
+      appointmentErrors: {
+        initialTouched: {products: [{productId: true}]},
+        initialErrors: {},
+      } satisfies AppointmentErrors,
+    },
+  },
+  play: async ({canvasElement}) => {
+    const canvas = within(canvasElement);
+
+    const submitButton = canvas.getByRole('button', {name: 'Bevestig producten'});
+    await userEvent.click(submitButton);
+    expect(
+      await canvas.findByText('The maximum amount of persons for this product is 3.')
+    ).toBeVisible();
   },
 };

@@ -1,14 +1,15 @@
 import {EditGrid} from '@open-formulieren/formio-renderer';
 import {Heading3} from '@utrecht/component-library-react';
-import {Form, Formik} from 'formik';
+import {Form, Formik, useFormikContext} from 'formik';
 import {produce} from 'immer';
-import {useContext} from 'react';
+import {useContext, useEffect, useMemo} from 'react';
 import {flushSync} from 'react-dom';
-import {FormattedMessage, useIntl} from 'react-intl';
+import {FormattedMessage, type IntlShape, useIntl} from 'react-intl';
 import {useNavigate, useSearchParams} from 'react-router';
 import {z} from 'zod';
 import {toFormikValidationSchema} from 'zod-formik-adapter';
 
+import {ConfigContext} from '@/Context';
 import {CardTitle} from '@/components/Card';
 import type {AppointmentProduct} from '@/data/appointments';
 import useTitle from '@/hooks/useTitle';
@@ -17,22 +18,51 @@ import {AppointmentConfigContext} from '../Context';
 import {useCreateAppointmentContext} from '../CreateAppointment/CreateAppointmentState';
 import SubmitRow from '../SubmitRow';
 import {Product} from '../fields';
+import {getAllProducts} from '../fields/ProductSelect';
 
 export interface ProductStepValues {
   products: AppointmentProduct[];
 }
 
-const productSchema = z
-  .array(
-    z.object({
-      productId: z.string(),
-      amount: z.number().int().gte(1).finite(),
-    })
-  )
-  .nonempty();
+export const getValidationSchema = (intl: IntlShape, supportsMultipleProducts: boolean) => {
+  const productSchema = z
+    .array(
+      z
+        .object({
+          productId: z.string(),
+          amount: z.number().int().gte(1).finite(),
+          amountLimit: z.number().int(),
+        })
+        .superRefine((data, ctx) => {
+          if (data.amountLimit > 0 && data.amountLimit < data.amount) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: intl.formatMessage(
+                {
+                  description: 'Amount limit exceeded error message',
+                  defaultMessage: 'The maximum amount of persons for this product is {maxAmount}.',
+                },
+                {
+                  maxAmount: data.amountLimit,
+                }
+              ),
+              path: ['amount'],
+            });
+          }
+        })
+    )
+    .nonempty();
 
-const chooseSingleProductSchema = z.object({products: productSchema.max(1)});
-const chooseMultiProductSchema = z.object({products: productSchema});
+  const chooseSingleProductSchema = z.object({
+    products: productSchema.max(1),
+  });
+
+  const chooseMultiProductSchema = z.object({
+    products: productSchema,
+  });
+
+  return supportsMultipleProducts ? chooseMultiProductSchema : chooseSingleProductSchema;
+};
 
 export interface ChooseProductStepFieldsProps {
   values: ProductStepValues;
@@ -42,16 +72,36 @@ const ChooseProductStepFields: React.FC<ChooseProductStepFieldsProps> = ({
   values: {products = []},
 }) => {
   const intl = useIntl();
+  const {baseUrl} = useContext(ConfigContext);
+  const {setFieldValue} = useFormikContext();
   const {supportsMultipleProducts} = useContext(AppointmentConfigContext);
   const selectedProductIds = products.map(p => p.productId).filter(Boolean);
   const numProducts = Math.max(products.length, 1);
+
+  useEffect(() => {
+    const fetchAllProducts = async () => {
+      const allProducts = await getAllProducts(baseUrl);
+
+      products?.forEach((product, index) => {
+        const matchingProduct = allProducts.find(p => p.identifier === product.productId);
+
+        // set the correct limit of persons based on the retrieved products
+        if (matchingProduct) {
+          setFieldValue(`products.${index}.amountLimit`, matchingProduct.amountLimit);
+        }
+      });
+    };
+
+    fetchAllProducts();
+  }, [products, baseUrl, setFieldValue]);
+
   return (
     <Form>
       {supportsMultipleProducts ? (
         <EditGrid
           label=""
           name="products"
-          emptyItem={{productId: '', amount: 1}}
+          emptyItem={{productId: '', amount: 1, amountLimit: 0}}
           addButtonLabel={intl.formatMessage({
             description: 'Appointments: add additional product/service button text',
             defaultMessage: 'Add another product',
@@ -88,6 +138,7 @@ const INITIAL_VALUES: ProductStepValues = {
     {
       productId: '',
       amount: 1,
+      amountLimit: 0,
     },
   ],
 };
@@ -121,9 +172,10 @@ const ChooseProductStep: React.FC<ChooseProductStepProps> = ({navigateTo = null}
     }
   });
 
-  const validationSchema = supportsMultipleProducts
-    ? chooseMultiProductSchema
-    : chooseSingleProductSchema;
+  const validationSchema = useMemo(
+    () => toFormikValidationSchema(getValidationSchema(intl, supportsMultipleProducts)),
+    [intl, supportsMultipleProducts]
+  );
 
   return (
     <>
@@ -149,7 +201,7 @@ const ChooseProductStep: React.FC<ChooseProductStepProps> = ({navigateTo = null}
         initialTouched={initialTouched}
         validateOnChange={false}
         validateOnBlur={false}
-        validationSchema={toFormikValidationSchema(validationSchema)}
+        validationSchema={validationSchema}
         onSubmit={(values, {setSubmitting}) => {
           flushSync(() => {
             clearStepErrors();

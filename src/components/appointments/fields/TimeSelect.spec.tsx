@@ -12,7 +12,7 @@ import messagesEN from '@/i18n/compiled/en.json';
 
 import TimeSelect from './TimeSelect';
 
-const products: AppointmentProduct[] = [{productId: 'e8e045ab', amount: 1}];
+const products: AppointmentProduct[] = [{productId: 'e8e045ab', amount: 1, amountLimit: 0}];
 
 const render = (children: React.ReactNode, locationId: string) =>
   realRender(

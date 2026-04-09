@@ -14,7 +14,7 @@ import DateSelect from './DateSelect';
 
 const waitForPosition = () => act(async () => {});
 
-const products: AppointmentProduct[] = [{productId: 'e8e045ab', amount: 1}];
+const products: AppointmentProduct[] = [{productId: 'e8e045ab', amount: 1, amountLimit: 0}];
 
 const render = (children: React.ReactNode, locationId: string) =>
   realRender(

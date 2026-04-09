@@ -1591,6 +1591,20 @@
       "value": "Product en/of dienst(en)"
     }
   ],
+  "J2bTRy": [
+    {
+      "type": 0,
+      "value": "The maximum amount of persons for this product is "
+    },
+    {
+      "type": 1,
+      "value": "maxAmount"
+    },
+    {
+      "type": 0,
+      "value": "."
+    }
+  ],
   "JB/IBw": [
     {
       "type": 0,

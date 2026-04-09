@@ -25,7 +25,7 @@ export default {
       currentStep: 'kalender',
       appointmentData: {
         producten: {
-          products: [{productId: '166a5c79', amount: 1}],
+          products: [{productId: '166a5c79', amount: 1, amountLimit: 0}],
         },
         kalender: {
           location: '',
@@ -58,7 +58,7 @@ export const WithBackendErrors: Story = {
       currentStep: 'kalender',
       appointmentData: {
         producten: {
-          products: [{productId: '166a5c79', amount: 1}],
+          products: [{productId: '166a5c79', amount: 1, amountLimit: 0}],
         },
         kalender: {
           location: '1396f17c',
@@ -90,7 +90,7 @@ export const DependentFieldsReset: Story = {
       currentStep: 'kalender',
       appointmentData: {
         producten: {
-          products: [{productId: 'e8e045ab', amount: 1}],
+          products: [{productId: 'e8e045ab', amount: 1, amountLimit: 0}],
         },
         kalender: {
           location: '34000e85',

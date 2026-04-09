@@ -138,7 +138,7 @@ describe('Create appointment status checking', () => {
     const submission = buildSubmission({steps: []});
     const appointmentData: AppointmentDataByStep = {
       producten: {
-        products: [{productId: '166a5c79', amount: 1}],
+        products: [{productId: '166a5c79', amount: 1, amountLimit: 0}],
       },
       kalender: {
         location: '1396f17c',
