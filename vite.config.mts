@@ -219,12 +219,12 @@ export default defineConfig(({mode}) => {
       },
       coverage: {
         provider: 'istanbul',
-        include: ['src/**/*.{js,jsx,ts,tsx}'],
+        include: ['src/**/*.{ts,tsx}'],
         exclude: [
           'src/**/*.d.ts',
-          'src/**/*.stories.{js,jsx,ts,tsx}',
+          'src/**/*.stories.{ts,tsx}',
           'src/api-mocks/*',
-          'src/**/mocks.{js,jsx}',
+          'src/**/mocks.ts',
           'src/story-utils/*',
           ...coverageConfigDefaults.exclude,
         ],
