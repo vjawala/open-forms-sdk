@@ -13,7 +13,7 @@
  */
 import type {JSONValue} from '@open-formulieren/types';
 import {formatISODuration} from 'date-fns';
-import {LogicEngine} from 'json-logic-engine';
+import {LogicEngine as LogicEngine_} from 'json-logic-engine';
 
 import {
   customAddition,
@@ -39,6 +39,12 @@ import {
   jsonLogicToday,
 } from './extensions';
 import {TYPE} from './extensions/constants';
+
+class LogicEngine extends LogicEngine_ {
+  isData = (data: Record<string, JSONValue>, key: string) => {
+    return !(Object.keys(data).length == 1 && key in this.methods);
+  };
+}
 
 const engine = new LogicEngine();
 engine.addMethod('date', jsonLogicDate, {deterministic: true});
