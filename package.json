@@ -199,17 +199,6 @@
           "idInterpolationPattern": "[sha512:contenthash:base64:6]",
           "ast": true
         }
-      ],
-      [
-        "module-resolver",
-        {
-          "root": [
-            "./src"
-          ],
-          "alias": {
-            "": "./src"
-          }
-        }
       ]
     ]
   },
