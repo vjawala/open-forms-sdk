@@ -190,7 +190,7 @@ export const WithFrontendErrors: Story = {
     const submitButton = canvas.getByRole('button', {name: 'Bevestig producten'});
     await userEvent.click(submitButton);
     expect(
-      await canvas.findByText('The maximum amount of persons for this product is 3')
+      await canvas.findByText('The maximum amount of persons for this product is 3.')
     ).toBeVisible();
   },
 };

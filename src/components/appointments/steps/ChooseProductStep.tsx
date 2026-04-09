@@ -2,7 +2,7 @@ import {EditGrid} from '@open-formulieren/formio-renderer';
 import {Heading3} from '@utrecht/component-library-react';
 import {Form, Formik, useFormikContext} from 'formik';
 import {produce} from 'immer';
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useMemo} from 'react';
 import {flushSync} from 'react-dom';
 import {FormattedMessage, type IntlShape, useIntl} from 'react-intl';
 import {useNavigate, useSearchParams} from 'react-router';
@@ -40,7 +40,7 @@ export const getValidationSchema = (intl: IntlShape, supportsMultipleProducts: b
               message: intl.formatMessage(
                 {
                   description: 'Amount limit exceeded error message',
-                  defaultMessage: 'The maximum amount of persons for this product is {maxAmount}',
+                  defaultMessage: 'The maximum amount of persons for this product is {maxAmount}.',
                 },
                 {
                   maxAmount: data.amountLimit,
@@ -93,7 +93,7 @@ const ChooseProductStepFields: React.FC<ChooseProductStepFieldsProps> = ({
     };
 
     fetchAllProducts();
-  }, [products]);
+  }, [products, baseUrl, setFieldValue]);
 
   return (
     <Form>
@@ -172,8 +172,9 @@ const ChooseProductStep: React.FC<ChooseProductStepProps> = ({navigateTo = null}
     }
   });
 
-  const validationSchema = toFormikValidationSchema(
-    getValidationSchema(intl, supportsMultipleProducts)
+  const validationSchema = useMemo(
+    () => toFormikValidationSchema(getValidationSchema(intl, supportsMultipleProducts)),
+    [intl, supportsMultipleProducts]
   );
 
   return (

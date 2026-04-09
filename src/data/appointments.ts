@@ -59,7 +59,7 @@ export interface AppointmentProduct {
   /**
    * The maximum amount of the allowed persons for a product.
    *
-   * This has a default to zero if it's not known (no limit).
+   * This has a default of `0` if it's not known, meaning the amount is unlimited.
    */
   amountLimit: number;
 }

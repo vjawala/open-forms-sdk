@@ -1273,16 +1273,6 @@
       "value": "minTime"
     }
   ],
-  "GaibEj": [
-    {
-      "type": 0,
-      "value": "The maximum amount of persons for this product is "
-    },
-    {
-      "type": 1,
-      "value": "maxAmount"
-    }
-  ],
   "GbPef0": [
     {
       "type": 0,
@@ -1605,6 +1595,20 @@
     {
       "type": 0,
       "value": "Select your product(s)"
+    }
+  ],
+  "J2bTRy": [
+    {
+      "type": 0,
+      "value": "The maximum amount of persons for this product is "
+    },
+    {
+      "type": 1,
+      "value": "maxAmount"
+    },
+    {
+      "type": 0,
+      "value": "."
     }
   ],
   "JB/IBw": [

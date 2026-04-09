@@ -344,11 +344,6 @@
     "description": "Email verification modal: warning that no email is specified",
     "originalDefault": "You haven't entered an email address yet."
   },
-  "GaibEj": {
-    "defaultMessage": "The maximum amount of persons for this product is {maxAmount}",
-    "description": "Amount limit exceeded error message",
-    "originalDefault": "The maximum amount of persons for this product is {maxAmount}"
-  },
   "GbPef0": {
     "defaultMessage": "You must provide a house number.",
     "description": "ZOD error message when AddressNL postcode is provided but not houseNumber",
@@ -413,6 +408,11 @@
     "defaultMessage": "Select your product(s)",
     "description": "Appointments products step title",
     "originalDefault": "Select your product(s)"
+  },
+  "J2bTRy": {
+    "defaultMessage": "The maximum amount of persons for this product is {maxAmount}.",
+    "description": "Amount limit exceeded error message",
+    "originalDefault": "The maximum amount of persons for this product is {maxAmount}."
   },
   "JB/IBw": {
     "defaultMessage": "The payment has failed. If you aborted the payment, please complete payment from the confirmation email.",
