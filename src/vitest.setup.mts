@@ -4,7 +4,7 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
-import mswServer from 'api-mocks/msw-server';
+import mswServer from '@/api-mocks/msw-server';
 
 beforeAll(async () => {
   // set up HTTP mocks
