@@ -141,28 +141,10 @@
       "value": "Remove"
     }
   ],
-  "/HGnU6": [
-    {
-      "type": 0,
-      "value": "BSN"
-    }
-  ],
   "/RrV7w": [
     {
       "type": 0,
       "value": "House number addition must be up to four letters and digits."
-    }
-  ],
-  "/jQkSu": [
-    {
-      "type": 0,
-      "value": "Add child"
-    }
-  ],
-  "/oxZic": [
-    {
-      "type": 0,
-      "value": "Initials"
     }
   ],
   "/yX9Xl": [
@@ -259,20 +241,6 @@
     {
       "type": 0,
       "value": "Remove"
-    }
-  ],
-  "1Jy08C": [
-    {
-      "type": 0,
-      "value": "Edit child with BSN: "
-    },
-    {
-      "type": 1,
-      "value": "bsn"
-    },
-    {
-      "type": 0,
-      "value": "."
     }
   ],
   "1hdvgS": [
@@ -505,12 +473,6 @@
       "value": "Invalid BSN."
     }
   ],
-  "6EoG3C": [
-    {
-      "type": 0,
-      "value": "Save"
-    }
-  ],
   "6GNK65": [
     {
       "type": 0,
@@ -687,12 +649,6 @@
       "value": "Time"
     }
   ],
-  "8MVAfQ": [
-    {
-      "type": 0,
-      "value": "Edit child"
-    }
-  ],
   "8MZ9TV": [
     {
       "type": 0,
@@ -813,12 +769,6 @@
     {
       "type": 0,
       "value": "The signature value must be a base64-encoded png."
-    }
-  ],
-  "AM6xqd": [
-    {
-      "type": 0,
-      "value": "House number must be a number with up to five digits (e.g. 456)."
     }
   ],
   "ATXTTM": [
@@ -1075,12 +1025,6 @@
       "value": "Date of birth must be within the last 120 years."
     }
   ],
-  "DrrkB0": [
-    {
-      "type": 0,
-      "value": "Edit partner"
-    }
-  ],
   "DvlDIB": [
     {
       "type": 0,
@@ -1209,12 +1153,6 @@
       "value": "Rate this form as 'Good'"
     }
   ],
-  "EPQl+D": [
-    {
-      "type": 0,
-      "value": "House number addition must be up to four letters and digits."
-    }
-  ],
   "EZ7myd": [
     {
       "type": 0,
@@ -1273,12 +1211,6 @@
       "value": "minTime"
     }
   ],
-  "GbPef0": [
-    {
-      "type": 0,
-      "value": "You must provide a house number."
-    }
-  ],
   "GiRKAS": [
     {
       "type": 0,
@@ -1321,12 +1253,6 @@
     {
       "type": 0,
       "value": "Summary"
-    }
-  ],
-  "H8mxqp": [
-    {
-      "type": 0,
-      "value": "Date of birth"
     }
   ],
   "HGx1ny": [
@@ -1719,12 +1645,6 @@
       "value": "Did you receive an email with a request to cosign? Start the cosigning by logging in."
     }
   ],
-  "LXXhoO": [
-    {
-      "type": 0,
-      "value": "Affixes"
-    }
-  ],
   "LYjd+f": [
     {
       "type": 0,
@@ -1831,12 +1751,6 @@
     {
       "type": 0,
       "value": "Save"
-    }
-  ],
-  "N9YM+2": [
-    {
-      "type": 0,
-      "value": "Add partner"
     }
   ],
   "NZ8rJn": [
@@ -2361,12 +2275,6 @@
       "value": "."
     }
   ],
-  "VCgwM7": [
-    {
-      "type": 0,
-      "value": "Add Child"
-    }
-  ],
   "VSf9fx": [
     {
       "type": 0,
@@ -2419,12 +2327,6 @@
       "value": "Your payment has been received."
     }
   ],
-  "W4dbIb": [
-    {
-      "type": 0,
-      "value": "Date of birth"
-    }
-  ],
   "WDiVaT": [
     {
       "type": 0,
@@ -2465,12 +2367,6 @@
     {
       "type": 0,
       "value": "Location and time"
-    }
-  ],
-  "X9Jjme": [
-    {
-      "type": 0,
-      "value": "Save"
     }
   ],
   "XeIY+R": [
@@ -2753,20 +2649,6 @@
       "value": "The verification code must contain exactly six characters."
     }
   ],
-  "c4FCKY": [
-    {
-      "type": 0,
-      "value": "Delete child with BSN: "
-    },
-    {
-      "type": 1,
-      "value": "bsn"
-    },
-    {
-      "type": 0,
-      "value": "."
-    }
-  ],
   "cBsrax": [
     {
       "type": 0,
@@ -2951,12 +2833,6 @@
     {
       "type": 0,
       "value": "Edit child"
-    }
-  ],
-  "hWv0yN": [
-    {
-      "type": 0,
-      "value": "House letter must be a single letter."
     }
   ],
   "hcw9Gf": [
@@ -3315,12 +3191,6 @@
       "value": "Product"
     }
   ],
-  "lKBAu3": [
-    {
-      "type": 0,
-      "value": "You must provide a postcode."
-    }
-  ],
   "lQY+Zm": [
     {
       "type": 0,
@@ -3521,12 +3391,6 @@
       "value": "."
     }
   ],
-  "or6w5Z": [
-    {
-      "type": 0,
-      "value": "Add partner"
-    }
-  ],
   "osSl3z": [
     {
       "type": 0,
@@ -3577,12 +3441,6 @@
     {
       "type": 0,
       "value": "Save"
-    }
-  ],
-  "psBz1n": [
-    {
-      "type": 0,
-      "value": "BSN"
     }
   ],
   "pzR8ui": [
@@ -3717,12 +3575,6 @@
       "value": "Suspending the form failed, please try again later"
     }
   ],
-  "r4wx7J": [
-    {
-      "type": 0,
-      "value": "Lastname"
-    }
-  ],
   "r6qiY/": [
     {
       "type": 0,
@@ -3730,12 +3582,6 @@
     }
   ],
   "rQ5vC9": [
-    {
-      "type": 0,
-      "value": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
-    }
-  ],
-  "rUsmvU": [
     {
       "type": 0,
       "value": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
@@ -3915,12 +3761,6 @@
     {
       "type": 0,
       "value": "Day"
-    }
-  ],
-  "vHBt6x": [
-    {
-      "type": 0,
-      "value": "Firstnames"
     }
   ],
   "vIfXbq": [

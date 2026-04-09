@@ -14,21 +14,6 @@
     "description": "Appointments navbar title for 'location and time' step",
     "originalDefault": "Location and time"
   },
-  "/HGnU6": {
-    "defaultMessage": "BSN",
-    "description": "Label for partners BSN",
-    "originalDefault": "BSN"
-  },
-  "/jQkSu": {
-    "defaultMessage": "Add child",
-    "description": "Add child modal title",
-    "originalDefault": "Add child"
-  },
-  "/oxZic": {
-    "defaultMessage": "Initials",
-    "description": "Label for partners initials",
-    "originalDefault": "Initials"
-  },
   "0j8tMq": {
     "defaultMessage": "Log out",
     "description": "Log out button text",
@@ -38,11 +23,6 @@
     "defaultMessage": "You are verifying the email address <link>{emailAddress}</link>. First, we need to send you a verification code on this email address. Then, you need to enter the code to confirm it.",
     "description": "Email verification modal body text",
     "originalDefault": "You are verifying the email address <link>{emailAddress}</link>. First, we need to send you a verification code on this email address. Then, you need to enter the code to confirm it."
-  },
-  "1Jy08C": {
-    "defaultMessage": "Edit child with BSN: {bsn}.",
-    "description": "Edit child button [bsn]",
-    "originalDefault": "Edit child with BSN: {bsn}."
   },
   "1hdvgS": {
     "defaultMessage": "Something went wrong while presenting the login option. Please contact the municipality.",
@@ -94,11 +74,6 @@
     "description": "Check overview and co-sign",
     "originalDefault": "Check and co-sign submission"
   },
-  "6EoG3C": {
-    "defaultMessage": "Save",
-    "description": "Add child: save child data button text",
-    "originalDefault": "Save"
-  },
   "6GNK65": {
     "defaultMessage": "There was an authentication and/or permission problem.",
     "description": "Authentication error message",
@@ -144,11 +119,6 @@
     "description": "Appoinments: time select label",
     "originalDefault": "Time"
   },
-  "8MVAfQ": {
-    "defaultMessage": "Edit child",
-    "description": "Edit child modal title",
-    "originalDefault": "Edit child"
-  },
   "8MZ9TV": {
     "defaultMessage": "Please accept the privacy policy before submitting",
     "description": "Warning privacy policy not checked when submitting",
@@ -184,20 +154,10 @@
     "description": "Appointment cancelled title",
     "originalDefault": "Appointment cancelled"
   },
-  "9UF9Z7": {
-    "defaultMessage": "No information provided",
-    "description": "Emtpy field message",
-    "originalDefault": "No information provided"
-  },
   "AG5zPa": {
     "defaultMessage": "Check and confirm",
     "description": "Check overview and confirm",
     "originalDefault": "Check and confirm"
-  },
-  "AM6xqd": {
-    "defaultMessage": "House number must be a number with up to five digits (e.g. 456).",
-    "description": "ZOD error message when AddressNL house number does not match the house number regular expression",
-    "originalDefault": "House number must be a number with up to five digits (e.g. 456)."
   },
   "ATXTTM": {
     "defaultMessage": "A payment is required for this product.",
@@ -254,11 +214,6 @@
     "description": "Maintenance mode message",
     "originalDefault": "This form is currently undergoing maintenance and can not be accessed at the moment."
   },
-  "DEetjI": {
-    "defaultMessage": "Street name",
-    "description": "Label for addressNL streetName read only result",
-    "originalDefault": "Street name"
-  },
   "DK2ewv": {
     "defaultMessage": "Authentication problem",
     "description": "'Permission denied' error title",
@@ -268,11 +223,6 @@
     "defaultMessage": "Invalid function return type",
     "description": "ZOD 'invalid_return_type' error message",
     "originalDefault": "Invalid function return type"
-  },
-  "DrrkB0": {
-    "defaultMessage": "Edit partner",
-    "description": "Edit partner: edit partner button text",
-    "originalDefault": "Edit partner"
   },
   "DvlDIB": {
     "defaultMessage": "Are you sure that you want to logout?",
@@ -319,11 +269,6 @@
     "description": "Feedback face title - Good",
     "originalDefault": "Rate this form as 'Good'"
   },
-  "EPQl+D": {
-    "defaultMessage": "House number addition must be up to four letters and digits.",
-    "description": "ZOD error message when AddressNL house number addition does not match the house number addition regular expression",
-    "originalDefault": "House number addition must be up to four letters and digits."
-  },
   "EZ7myd": {
     "defaultMessage": "Email address verification",
     "description": "Email verification modal title",
@@ -344,11 +289,6 @@
     "description": "Email verification modal: warning that no email is specified",
     "originalDefault": "You haven't entered an email address yet."
   },
-  "GbPef0": {
-    "defaultMessage": "You must provide a house number.",
-    "description": "ZOD error message when AddressNL postcode is provided but not houseNumber",
-    "originalDefault": "You must provide a house number."
-  },
   "GiRKAS": {
     "defaultMessage": "Back to products",
     "description": "Appointments location and time step: previous step text",
@@ -368,11 +308,6 @@
     "defaultMessage": "Summary",
     "description": "Summary page title",
     "originalDefault": "Summary"
-  },
-  "H8mxqp": {
-    "defaultMessage": "Date of birth",
-    "description": "Label for partners dateOfBirth",
-    "originalDefault": "Date of birth"
   },
   "HGx1ny": {
     "defaultMessage": "Cancel appointment",
@@ -449,20 +384,10 @@
     "description": "Cosign start explanation message",
     "originalDefault": "Did you receive an email with a request to cosign? Start the cosigning by logging in."
   },
-  "LXXhoO": {
-    "defaultMessage": "Affixes",
-    "description": "Label for partners affixes",
-    "originalDefault": "Affixes"
-  },
   "LiRh7j": {
     "defaultMessage": "Confirmation: {reference}",
     "description": "Confirmation page title",
     "originalDefault": "Confirmation: {reference}"
-  },
-  "LsgvKh": {
-    "defaultMessage": "Postcode",
-    "description": "Label for addressNL postcode input",
-    "originalDefault": "Postcode"
   },
   "LwpSC/": {
     "defaultMessage": "Total",
@@ -494,20 +419,10 @@
     "description": "Payment page title",
     "originalDefault": "Payment"
   },
-  "N9YM+2": {
-    "defaultMessage": "Add partner",
-    "description": "Add partner: add partner button text",
-    "originalDefault": "Add partner"
-  },
   "P194bo": {
     "defaultMessage": "Invalid input: must start with \"{startsWith}\".",
     "description": "ZOD 'invalid_string' error message, with startsWith",
     "originalDefault": "Invalid input: must start with \"{startsWith}\"."
-  },
-  "PCv4sQ": {
-    "defaultMessage": "House number",
-    "description": "Label for addressNL houseNumber input",
-    "originalDefault": "House number"
   },
   "PjYrw0": {
     "defaultMessage": "Invalid input.",
@@ -574,11 +489,6 @@
     "description": "Appointments: single product label/header",
     "originalDefault": "Product {number}/{total}"
   },
-  "VCgwM7": {
-    "defaultMessage": "Add Child",
-    "description": "Add child: add child button text",
-    "originalDefault": "Add Child"
-  },
   "VaNtPf": {
     "defaultMessage": "Cancel appointment",
     "description": "Cancel appointment submit button",
@@ -588,11 +498,6 @@
     "defaultMessage": "Your payment has been received.",
     "description": "payment completed status",
     "originalDefault": "Your payment has been received."
-  },
-  "W4dbIb": {
-    "defaultMessage": "Date of birth",
-    "description": "Label for children dateOfBirth",
-    "originalDefault": "Date of birth"
   },
   "WDiVaT": {
     "defaultMessage": "Are you sure that you want to cancel this submission? You will lose your progress if you continue.",
@@ -613,11 +518,6 @@
     "defaultMessage": "Location and time",
     "description": "Appointment overview: location and time step title",
     "originalDefault": "Location and time"
-  },
-  "X9Jjme": {
-    "defaultMessage": "Save",
-    "description": "Add partner: save partner data button text",
-    "originalDefault": "Save"
   },
   "XeIY+R": {
     "defaultMessage": "Date must be smaller than or equal to {maximum}.",
@@ -694,16 +594,6 @@
     "description": "Validation error message for verification codes with length != 6",
     "originalDefault": "The verification code must contain exactly six characters."
   },
-  "c4FCKY": {
-    "defaultMessage": "Delete child with BSN: {bsn}.",
-    "description": "Delete child button [bsn]",
-    "originalDefault": "Delete child with BSN: {bsn}."
-  },
-  "cBsrax": {
-    "defaultMessage": "House letter",
-    "description": "Label for addressNL houseLetter input",
-    "originalDefault": "House letter"
-  },
   "cxDC/G": {
     "defaultMessage": "The required field is not filled out.",
     "description": "ZOD 'required' error message",
@@ -758,11 +648,6 @@
     "defaultMessage": "Something went wrong while submitting the form.",
     "description": "Generic submission error",
     "originalDefault": "Something went wrong while submitting the form."
-  },
-  "hWv0yN": {
-    "defaultMessage": "House letter must be a single letter.",
-    "description": "ZOD error message when AddressNL house letter does not match the house letter regular expression",
-    "originalDefault": "House letter must be a single letter."
   },
   "hcw9Gf": {
     "defaultMessage": "There are problems with the submitted data.",
@@ -859,20 +744,10 @@
     "description": "Appoinments: product select label",
     "originalDefault": "Product"
   },
-  "lKBAu3": {
-    "defaultMessage": "You must provide a postcode.",
-    "description": "ZOD error message when AddressNL houseNumber is provided but not postcode",
-    "originalDefault": "You must provide a postcode."
-  },
   "lQY+Zm": {
     "defaultMessage": "Enter the verification code",
     "description": "Email verification mode selection: enter code label",
     "originalDefault": "Enter the verification code"
-  },
-  "lVNV/d": {
-    "defaultMessage": "House number addition",
-    "description": "Label for addressNL houseNumberAddition input",
-    "originalDefault": "House number addition"
   },
   "lY+Mza": {
     "defaultMessage": "Product",
@@ -929,16 +804,6 @@
     "description": "ZOD 'too_big' error message, for BigInt",
     "originalDefault": "BigInt must be {exact, select, true {exactly equal to} other {{inclusive, select, true {less than or equal to} other {less than}}} } {maximum}."
   },
-  "or6w5Z": {
-    "defaultMessage": "Add partner",
-    "description": "Add partner modal title",
-    "originalDefault": "Add partner"
-  },
-  "osSl3z": {
-    "defaultMessage": "City",
-    "description": "Label for addressNL city read only result",
-    "originalDefault": "City"
-  },
   "pMkaJD": {
     "defaultMessage": "{field} must be a valid email address, like 'willem@example.com'.",
     "description": "Invalid email validation error",
@@ -948,11 +813,6 @@
     "defaultMessage": "Intersection results could not be merged",
     "description": "ZOD 'invalid_intersection_types' error message",
     "originalDefault": "Intersection results could not be merged"
-  },
-  "psBz1n": {
-    "defaultMessage": "BSN",
-    "description": "Label for children BSN",
-    "originalDefault": "BSN"
   },
   "q9AKjH": {
     "defaultMessage": "String must contain {exact, select, true {exactly} other {{inclusive, select, true {at most} other {under}}} } {maximum, plural, one {{maximum} character} other {{maximum} characters}}.",
@@ -973,16 +833,6 @@
     "defaultMessage": "Suspending the form failed, please try again later",
     "description": "Modal suspending form failed message",
     "originalDefault": "Suspending the form failed, please try again later"
-  },
-  "r4wx7J": {
-    "defaultMessage": "Lastname",
-    "description": "Label for partners lastName",
-    "originalDefault": "Lastname"
-  },
-  "rUsmvU": {
-    "defaultMessage": "Postcode must be four digits followed by two letters (e.g. 1234 AB).",
-    "description": "ZOD error message when AddressNL postcode does not match the postcode regular expression",
-    "originalDefault": "Postcode must be four digits followed by two letters (e.g. 1234 AB)."
   },
   "rWbce4": {
     "defaultMessage": "Form unavailable",
@@ -1033,11 +883,6 @@
     "defaultMessage": "Failed to determine the appointment",
     "description": "Appointment cancellation missing submission ID query string parameter",
     "originalDefault": "Failed to determine the appointment"
-  },
-  "vHBt6x": {
-    "defaultMessage": "Firstnames",
-    "description": "Label for children firstNames",
-    "originalDefault": "Firstnames"
   },
   "vIfXbq": {
     "defaultMessage": "Failed to determine the appointment time",

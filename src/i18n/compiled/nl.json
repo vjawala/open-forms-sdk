@@ -141,28 +141,10 @@
       "value": "Verwijderen"
     }
   ],
-  "/HGnU6": [
-    {
-      "type": 0,
-      "value": "BSN"
-    }
-  ],
   "/RrV7w": [
     {
       "type": 0,
       "value": "Huisnummertoevoeging moet bestaan uit maximaal vier letters en cijfers."
-    }
-  ],
-  "/jQkSu": [
-    {
-      "type": 0,
-      "value": "Kind toevoegen"
-    }
-  ],
-  "/oxZic": [
-    {
-      "type": 0,
-      "value": "Initialen"
     }
   ],
   "/yX9Xl": [
@@ -259,20 +241,6 @@
     {
       "type": 0,
       "value": "Verwijderen"
-    }
-  ],
-  "1Jy08C": [
-    {
-      "type": 0,
-      "value": "Bewerk kind met BSN: "
-    },
-    {
-      "type": 1,
-      "value": "bsn"
-    },
-    {
-      "type": 0,
-      "value": "."
     }
   ],
   "1hdvgS": [
@@ -509,12 +477,6 @@
       "value": "Ongeldig BSN."
     }
   ],
-  "6EoG3C": [
-    {
-      "type": 0,
-      "value": "Opslaan"
-    }
-  ],
   "6GNK65": [
     {
       "type": 0,
@@ -691,12 +653,6 @@
       "value": "Tijdstip"
     }
   ],
-  "8MVAfQ": [
-    {
-      "type": 0,
-      "value": "Kind bewerken"
-    }
-  ],
   "8MZ9TV": [
     {
       "type": 0,
@@ -817,12 +773,6 @@
     {
       "type": 0,
       "value": "De handtekening moet een base64-geëncodeerde PNG-afbeelding zijn."
-    }
-  ],
-  "AM6xqd": [
-    {
-      "type": 0,
-      "value": "Huisnummer moet een nummer zijn met maximaal 5 cijfers (bijv. 456)."
     }
   ],
   "ATXTTM": [
@@ -1049,12 +999,6 @@
       "value": "De geboortedatum mag hoogstens 120 jaar geleden zijn."
     }
   ],
-  "DrrkB0": [
-    {
-      "type": 0,
-      "value": "Partner bewerken"
-    }
-  ],
   "DvlDIB": [
     {
       "type": 0,
@@ -1187,12 +1131,6 @@
       "value": "Beoordeel dit formulier als 'goed'"
     }
   ],
-  "EPQl+D": [
-    {
-      "type": 0,
-      "value": "Huisnummertoevoeging moet bestaan uit maximaal vier letters en cijfers."
-    }
-  ],
   "EZ7myd": [
     {
       "type": 0,
@@ -1255,12 +1193,6 @@
       "value": " zijn."
     }
   ],
-  "GbPef0": [
-    {
-      "type": 0,
-      "value": "Huisnummer is verplicht."
-    }
-  ],
   "GiRKAS": [
     {
       "type": 0,
@@ -1303,12 +1235,6 @@
     {
       "type": 0,
       "value": "Overzicht"
-    }
-  ],
-  "H8mxqp": [
-    {
-      "type": 0,
-      "value": "Geboortedatum"
     }
   ],
   "HGx1ny": [
@@ -1713,12 +1639,6 @@
       "value": "Heb je een e-mail ontvangen om mede te ondertekenen? Start het medeondertekenen door in te loggen."
     }
   ],
-  "LXXhoO": [
-    {
-      "type": 0,
-      "value": "Voorvoegsels"
-    }
-  ],
   "LYjd+f": [
     {
       "type": 0,
@@ -1825,12 +1745,6 @@
     {
       "type": 0,
       "value": "Opslaan"
-    }
-  ],
-  "N9YM+2": [
-    {
-      "type": 0,
-      "value": "Partner toevoegen"
     }
   ],
   "NZ8rJn": [
@@ -2291,12 +2205,6 @@
       "value": " zijn."
     }
   ],
-  "VCgwM7": [
-    {
-      "type": 0,
-      "value": "Kind toevoegen"
-    }
-  ],
   "VSf9fx": [
     {
       "type": 0,
@@ -2349,12 +2257,6 @@
       "value": "De betaling is ontvangen."
     }
   ],
-  "W4dbIb": [
-    {
-      "type": 0,
-      "value": "Geboortedatum"
-    }
-  ],
   "WDiVaT": [
     {
       "type": 0,
@@ -2395,12 +2297,6 @@
     {
       "type": 0,
       "value": "Locatie en tijdstip"
-    }
-  ],
-  "X9Jjme": [
-    {
-      "type": 0,
-      "value": "Opslaan"
     }
   ],
   "XeIY+R": [
@@ -2691,20 +2587,6 @@
       "value": "De bevestigingscode moet precies zes tekens lang zijn."
     }
   ],
-  "c4FCKY": [
-    {
-      "type": 0,
-      "value": "Verwijder kind met BSN: "
-    },
-    {
-      "type": 1,
-      "value": "bsn"
-    },
-    {
-      "type": 0,
-      "value": "."
-    }
-  ],
   "cBsrax": [
     {
       "type": 0,
@@ -2889,12 +2771,6 @@
     {
       "type": 0,
       "value": "Kind bewerken"
-    }
-  ],
-  "hWv0yN": [
-    {
-      "type": 0,
-      "value": "Huisletter moet een enkele letter zijn."
     }
   ],
   "hcw9Gf": [
@@ -3257,12 +3133,6 @@
       "value": "Product"
     }
   ],
-  "lKBAu3": [
-    {
-      "type": 0,
-      "value": "Postcode is verplicht."
-    }
-  ],
   "lQY+Zm": [
     {
       "type": 0,
@@ -3463,12 +3333,6 @@
       "value": " zijn."
     }
   ],
-  "or6w5Z": [
-    {
-      "type": 0,
-      "value": "Partner toevoegen"
-    }
-  ],
   "osSl3z": [
     {
       "type": 0,
@@ -3519,12 +3383,6 @@
     {
       "type": 0,
       "value": "Bevestigen"
-    }
-  ],
-  "psBz1n": [
-    {
-      "type": 0,
-      "value": "BSN"
     }
   ],
   "pzR8ui": [
@@ -3659,12 +3517,6 @@
       "value": "Het pauzeren van het formulier is mislukt. Probeer het later opnieuw."
     }
   ],
-  "r4wx7J": [
-    {
-      "type": 0,
-      "value": "Achternaam"
-    }
-  ],
   "r6qiY/": [
     {
       "type": 0,
@@ -3672,12 +3524,6 @@
     }
   ],
   "rQ5vC9": [
-    {
-      "type": 0,
-      "value": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB)."
-    }
-  ],
-  "rUsmvU": [
     {
       "type": 0,
       "value": "Postcode moet bestaan uit vier cijfers gevolgd door twee letters (bijv. 1234 AB)."
@@ -3857,12 +3703,6 @@
     {
       "type": 0,
       "value": "Dag"
-    }
-  ],
-  "vHBt6x": [
-    {
-      "type": 0,
-      "value": "Voornamen"
     }
   ],
   "vIfXbq": [
