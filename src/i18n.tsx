@@ -13,7 +13,7 @@ import {
 import {useAsync} from 'react-use';
 import {createState, useState as useGlobalState} from 'state-pool';
 
-import {ConfigContext, FormioTranslations} from '@/Context';
+import {ConfigContext} from '@/Context';
 import {get} from '@/api';
 import {logError} from '@/components/Errors';
 import type {ErrorBoundaryState} from '@/components/Errors/ErrorBoundary';
@@ -79,16 +79,6 @@ const formatMessageForLocale = async (
   return intl.formatMessage(msg);
 };
 
-export type FormioTranslations = Record<SupportedLocales, Record<string, string>>;
-
-const loadFormioTranslations = async (
-  baseUrl: string,
-  languageCode: SupportedLocales
-): Promise<Partial<FormioTranslations>> => {
-  const messages = await get(`${baseUrl}i18n/formio/${languageCode}`);
-  return {[languageCode]: messages};
-};
-
 export interface I18NContextType {
   onLanguageChangeDone: (newLanguageCode: SupportedLocales) => void;
   languageSelectorTarget: HTMLElement | null;
@@ -116,15 +106,8 @@ const I18NManager: React.FC<I18NManagerProps> = ({
 
   // ensure that we load the translations for the requested language
   const {loading, value, error} = useAsync(async () => {
-    const promises: [Promise<ReactIntlLocaleData>, Promise<Partial<FormioTranslations>>] = [
-      loadLocaleData(baseUrl, languageCode),
-      loadFormioTranslations(baseUrl, languageCode),
-    ];
-    const [messages, formioTranslations] = await Promise.all(promises);
-    return {
-      messages,
-      formioTranslations,
-    };
+    const messages = await loadLocaleData(baseUrl, languageCode);
+    return {messages};
   }, [baseUrl, languageCode]);
 
   if (loading) {
@@ -135,15 +118,13 @@ const I18NManager: React.FC<I18NManagerProps> = ({
     throw error;
   }
 
-  const {messages, formioTranslations} = value!; // no error, not loading -> value is not undefined
+  const {messages} = value!; // no error, not loading -> value is not undefined
 
   return (
     <IntlProvider messages={messages} locale={languageCode} defaultLocale="nl">
-      <FormioTranslations.Provider value={{i18n: formioTranslations, language: languageCode}}>
-        <I18NContext.Provider value={{languageSelectorTarget, onLanguageChangeDone}}>
-          {children}
-        </I18NContext.Provider>
-      </FormioTranslations.Provider>
+      <I18NContext.Provider value={{languageSelectorTarget, onLanguageChangeDone}}>
+        {children}
+      </I18NContext.Provider>
     </IntlProvider>
   );
 };

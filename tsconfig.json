@@ -17,12 +17,11 @@
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "noErrorTruncation": true,
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "paths": {
       "@/*": ["./*"],
-      "@/sb-decorators": ["../.storybook/decorators.tsx"],
-      "date-fns": ["../node_modules/date-fns"]
+      "@/sb-decorators": ["../.storybook/decorators.tsx"]
     },
     "types": [
       "vite/client",

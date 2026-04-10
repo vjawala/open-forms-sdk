@@ -7,7 +7,7 @@ import {FormattedMessage, useIntl} from 'react-intl';
 import {createSearchParams, useHref, useLocation, useNavigate} from 'react-router';
 import {useAsync} from 'react-use';
 
-import {ConfigContext, FormioTranslations} from '@/Context';
+import {ConfigContext} from '@/Context';
 import {CardTitle} from '@/components/Card';
 import ErrorMessage from '@/components/Errors/ErrorMessage';
 import {Literal} from '@/components/Literal';
@@ -59,7 +59,7 @@ const Summary: React.FC = () => {
   const {appointmentData, submission, setErrors} = useCreateAppointmentContext();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
-  const {language} = useContext(FormioTranslations);
+  const language = intl.locale;
 
   useTitle(
     intl.formatMessage({

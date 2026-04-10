@@ -5,18 +5,12 @@ import type {Preview, ReactRenderer} from '@storybook/react-vite';
 import '@utrecht/design-tokens/dist/index.css';
 import 'design-token-editor/lib/css/dte.css';
 import 'design-token-editor/lib/css/root.css';
-import 'flatpickr';
-import 'flatpickr/dist/l10n/nl.js';
 import lodash from 'lodash';
 import {initialize, mswLoader} from 'msw-storybook-addon';
 // @ts-expect-error formio has poor TS support
 import {Formio, Templates} from 'react-formio';
 import 'scss/dte-theme.scss';
 import 'styles.scss';
-
-// ensure NL locale is included
-import OpenFormsModule from 'formio/module';
-import OFLibrary from 'formio/templates';
 
 import {
   withClearSessionStorage,
@@ -26,7 +20,7 @@ import {
   withUtrechtDocument,
 } from './decorators';
 import {allModes} from './modes';
-import {reactIntl} from './reactIntl.mjs';
+import {reactIntl} from './reactIntl';
 
 window._ = lodash;
 
@@ -37,11 +31,6 @@ initialize({
   },
   quiet: true, // don't output logs
 });
-
-// Use our custom Form.io components
-Formio.use(OpenFormsModule);
-// use our own template library
-Templates.current = OFLibrary;
 
 const preview: Preview = {
   decorators: [

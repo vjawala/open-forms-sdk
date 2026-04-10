@@ -48,4 +48,9 @@
       row-gap: var(--of-summary-step-name-header-mobile-row-gap);
     }
   }
+
+  // TODO: use proper wrapping component from @utrecht NL DS component libraries
+  address {
+    font-style: normal;
+  }
 }

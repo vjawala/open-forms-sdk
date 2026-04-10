@@ -1,6 +1,6 @@
 import {HttpResponse, http} from 'msw';
 
-import {BASE_URL} from 'api-mocks';
+import {BASE_URL} from '@/api-mocks';
 
 export const UPLOAD_URL = `${BASE_URL}formio/fileupload`;
 const TEMP_FILE_URL = `${BASE_URL}submissions/files`;

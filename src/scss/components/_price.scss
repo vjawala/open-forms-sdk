@@ -1,9 +1,7 @@
 @import 'microscope-sass/lib/color';
 @import 'microscope-sass/lib/typography';
 
-@import '../mixins/prefix';
-
-.#{prefix(price)} {
+.openforms-price {
   @include body;
   @include margin(true, $properties: (padding-top, padding-bottom));
 

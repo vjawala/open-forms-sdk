@@ -61,7 +61,6 @@ const FORM = buildForm({
     },
   ],
   showProgressIndicator: true,
-  newRendererEnabled: true,
   newLogicEvaluationEnabled: true,
 });
 

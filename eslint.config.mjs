@@ -47,31 +47,16 @@ const config = defineConfig([
       ],
     },
   },
-  // Only allow JSX? in specific places, otherwise TS must be used.
-  {
-    files: ['src/**/*.{js,jsx}'],
-    ignores: [
-      'src/formio/**/*.{js,jsx}',
-      'src/jstests/formio/**/*.{js,jsx}',
-      'src/formio-init.js',
-      'src/components/FormStep/index.jsx',
-      'src/components/FormStep/data.js',
-      'src/components/FormStep/FormStep.stories.jsx',
-    ],
-    rules: {
-      'no-restricted-syntax': ['error', {selector: 'Program', message: 'You must use Typescript.'}],
-    },
-  },
   // default exports for stories meta is idiomatic
   {
-    files: ['src/**/*.stories.{js,jsx}'],
+    files: ['src/**/*.stories.{ts,tsx}'],
     rules: {
       'import/no-anonymous-default-export': 'off',
     },
   },
   // Unit tests
   {
-    files: ['**/*.spec.{js,jsx}', 'src/vitest.setup.mjs'],
+    files: ['**/*.spec.{ts,tsx}', 'src/vitest.setup.mts'],
     languageOptions: {
       globals: {
         ...globals.browser,

@@ -11,8 +11,6 @@
     "./open-forms-sdk.mjs": "./dist/bundles/open-forms-sdk.mjs",
     "./styles.css": "./dist/bundles/open-forms-sdk.css",
     "./bundles/*": "./dist/bundles/*",
-    "./formio-module": "./dist/formio/module.js",
-    "./formio-templates": "./dist/formio/templates/library.js",
     "./components/*": "./dist/components/*",
     "./hooks/*": "./dist/hooks/*",
     "./errors": "./dist/errors.js",
@@ -34,11 +32,9 @@
   "dependencies": {
     "@date-fns/tz": "^1.4.1",
     "@floating-ui/react": "^0.27.5",
-    "@formio/protected-eval": "^1.2.1",
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@open-formulieren/design-tokens": "^0.66.0",
     "@open-formulieren/formio-renderer": "^1.5.1",
-    "@open-formulieren/formiojs": "^4.13.14",
     "@open-formulieren/leaflet-tools": "^1.0.0",
     "@sentry/react": "^8.50.0",
     "clsx": "^2.1.1",
@@ -57,7 +53,6 @@
     "moment": "^2.29.1",
     "nuqs": "^2.8.6",
     "proj4leaflet": "^1.0.2",
-    "react-formio": "^4.3.0",
     "react-intl": "^7.1.14",
     "react-leaflet": "4.2.1",
     "react-leaflet-draw": "^0.20.6",
@@ -85,15 +80,15 @@
     "test": "TZ=Europe/Amsterdam vitest --project=unit",
     "test:storybook": "TZ=Europe/Amsterdam vitest --project=storybook",
     "prepare-package": "node bin/prepare-package.mjs",
-    "makemessages-en": "formatjs extract 'src/**/*.{js,jsx,ts,tsx}' --ignore='**/*.d.ts' --format bin/i18n-formatter.mjs --out-file src/i18n/messages/en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
-    "makemessages-nl": "formatjs extract 'src/**/*.{js,jsx,ts,tsx}' --ignore='**/*.d.ts' --format bin/i18n-formatter.mjs --out-file src/i18n/messages/nl.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
+    "makemessages-en": "formatjs extract 'src/**/*.{ts,tsx}' --ignore='**/*.d.ts' --format bin/i18n-formatter.mjs --out-file src/i18n/messages/en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
+    "makemessages-nl": "formatjs extract 'src/**/*.{ts,tsx}' --ignore='**/*.d.ts' --format bin/i18n-formatter.mjs --out-file src/i18n/messages/nl.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "makemessages": "npm run makemessages-nl && npm run makemessages-en",
     "compilemessages": "formatjs compile",
     "build:design-tokens": "npm run build --workspace=design-tokens",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build --webpack-stats-json",
-    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,scss,mdx}'",
-    "checkformat": "prettier --check 'src/**/*.{js,jsx,ts,tsx,scss,mdx}'",
+    "format": "prettier --write 'src/**/*.{ts,tsx,scss,mdx}'",
+    "checkformat": "prettier --check 'src/**/*.{ts,tsx,scss,mdx}'",
     "lint": "eslint src"
   },
   "workspaces": [
@@ -187,9 +182,6 @@
     "vitest": "^4.0.18",
     "yargs": "^18.0.0"
   },
-  "overrides": {
-    "formiojs": "npm:@open-formulieren/formiojs@4.13.14"
-  },
   "babel": {
     "presets": [
       [
@@ -206,17 +198,6 @@
         {
           "idInterpolationPattern": "[sha512:contenthash:base64:6]",
           "ast": true
-        }
-      ],
-      [
-        "module-resolver",
-        {
-          "root": [
-            "./src"
-          ],
-          "alias": {
-            "": "./src"
-          }
         }
       ]
     ]

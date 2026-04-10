@@ -70,7 +70,6 @@ export const FORM_DEFAULTS = {
   cosignHasLinkInEmail: false,
   paymentRequired: false,
   submissionReportDownloadLinkTitle: '',
-  newRendererEnabled: false,
   communicationPreferencesPortalUrl: '',
   newLogicEvaluationEnabled: false,
 } satisfies Form;

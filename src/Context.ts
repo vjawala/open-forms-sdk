@@ -44,7 +44,6 @@ const FormContext = React.createContext<Form>({
     isAppointment: false,
     supportsMultipleProducts: null,
   },
-  newRendererEnabled: false,
   communicationPreferencesPortalUrl: '',
   newLogicEvaluationEnabled: false,
 });
@@ -76,14 +75,6 @@ ConfigContext.displayName = 'ConfigContext';
 
 export type LanguageCode = string;
 
-export interface FormioTranslationsContext {
-  i18n: Record<LanguageCode, Record<string, string>>;
-  language: LanguageCode;
-}
-
-const FormioTranslations = React.createContext<FormioTranslationsContext>({i18n: {}, language: ''});
-FormioTranslations.displayName = 'FormioTranslations';
-
 export interface SubmissionContext {
   submission: Submission | null;
 }
@@ -91,4 +82,4 @@ export interface SubmissionContext {
 const SubmissionContext = React.createContext<SubmissionContext>({submission: null});
 SubmissionContext.displayName = 'SubmissionContext';
 
-export {FormContext, ConfigContext, FormioTranslations, SubmissionContext};
+export {FormContext, ConfigContext, SubmissionContext};

@@ -1,8 +1,6 @@
-import type {SupportedLocales} from '@open-formulieren/types';
 import {HttpResponse, http} from 'msw';
 
 import {BASE_URL} from '@/api-mocks';
-import type {FormioTranslations} from '@/i18n';
 
 import type {LanguageInfo} from './LanguageSelection';
 
@@ -50,38 +48,3 @@ export const mockInvalidLanguageChoicePut = (lang = 'fy') =>
       {status: 400}
     )
   );
-
-const FORMIO_TRANSLATIONS: FormioTranslations = {
-  nl: {
-    'Click to set value': 'Klik om waarde in te stellen',
-    Cancel: 'Annuleren',
-  },
-  en: {
-    'Click to set value': 'Click to set value',
-    Cancel: 'Cancel',
-  },
-};
-
-export const mockFormioTranslations = http.get<{lang: SupportedLocales}>(
-  `${BASE_URL}i18n/formio/:lang`,
-  ({params}) => {
-    const {lang} = params;
-    const translations = FORMIO_TRANSLATIONS[lang];
-    return HttpResponse.json(translations);
-  }
-);
-
-export const mockFormioTranslationsServiceUnavailable = http.get(
-  `${BASE_URL}i18n/formio/:lang`,
-  () => {
-    const errBody = {
-      type: `${BASE_URL}fouten/ServiceUnavailable/`,
-      code: 'service_unavailable',
-      title: 'Service is not available.',
-      status: 503,
-      detail: 'Service is not available.',
-      instance: 'urn:uuid:60b443e3-b847-424b-aed0-23820fc2a48d',
-    };
-    return HttpResponse.json(errBody, {status: 503});
-  }
-);

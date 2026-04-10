@@ -13,6 +13,8 @@ coverage:
 flag_management: {}
 
 ignore:
+  - "src/**/*.d.ts"
+  - "src/**/*.stories.*"
   - "src/api-mocks/*"
+  - "src/**/mocks.ts"
   - "src/story-utils/*"
-  - "src/**/mocks.{js,jsx}"
