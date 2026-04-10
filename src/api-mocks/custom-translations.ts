@@ -35,3 +35,18 @@ export const mockCustomStaticTranslationsNullGet = (language: AvailableLocale) =
   http.get(`${BASE_URL}i18n/compiled-messages/${language}.json`, () => {
     return HttpResponse.json(null);
   });
+
+export const mockCustomStaticTranslationsGetServiceUnavailable = http.get(
+  `${BASE_URL}i18n/compiled-messages/:language.json`,
+  () => {
+    const errBody = {
+      type: `${BASE_URL}fouten/ServiceUnavailable/`,
+      code: 'service_unavailable',
+      title: 'Service is not available.',
+      status: 503,
+      detail: 'Service is not available.',
+      instance: 'urn:uuid:60b443e3-b847-424b-aed0-23820fc2a48d',
+    };
+    return HttpResponse.json(errBody, {status: 503});
+  }
+);

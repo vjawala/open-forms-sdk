@@ -5,7 +5,10 @@ import {fn} from 'storybook/test';
 
 import {I18NErrorBoundary, I18NManager, setLanguage} from '@/i18n';
 
-import {mockCustomStaticTranslationsNullGet} from './api-mocks';
+import {
+  mockCustomStaticTranslationsGetServiceUnavailable,
+  mockCustomStaticTranslationsNullGet,
+} from './api-mocks';
 
 export default {
   title: 'Private API / Translation manager',
@@ -73,10 +76,7 @@ export const WithError: Story = {
   ),
   parameters: {
     msw: {
-      handlers: [
-        mockCustomStaticTranslationsNullGet('en'),
-        mockCustomStaticTranslationsNullGet('nl'),
-      ],
+      handlers: [mockCustomStaticTranslationsGetServiceUnavailable],
     },
   },
 };

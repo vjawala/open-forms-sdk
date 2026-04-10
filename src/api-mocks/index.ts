@@ -5,4 +5,5 @@ export {mockAnalyticsToolConfigGet} from './analytics';
 export {
   mockCustomStaticTranslationsGet,
   mockCustomStaticTranslationsNullGet,
+  mockCustomStaticTranslationsGetServiceUnavailable,
 } from './custom-translations';
