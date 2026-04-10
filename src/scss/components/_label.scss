@@ -1,14 +1,6 @@
 @use 'microscope-sass/lib/bem';
 @use './anchor';
 
-.openforms-char-count,
-.openforms-word-count,
-.openforms-prefix,
-.openforms-suffix {
-  @include body;
-  color: var(--of-color-fg-muted);
-}
-
 .utrecht-form-label {
   @include bem.modifier('openforms') {
     @include anchor.extend-utrecht-link;
