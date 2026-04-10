@@ -2,6 +2,54 @@
 SDK Changelog
 =============
 
+3.5.0 (2026-04-10)
+==================
+
+Feature release.
+
+.. warning:: SDK 3.5.0 requires at least version 3.5.0 of the Open Formulieren API.
+
+New features
+------------
+
+* Appointments improvements:
+
+  - [#5820] We now support retrieving custom static translation assets from the backend.
+  - [#5691] Added a descriptive text to clarify appointment product selection.
+  - [#5692] Hide weekend and year navigation controls from Calendar in the Appointments.
+  - [#5691] The product amount limit (if provided) can now be validated.
+
+* [#5319] Login option for organizations with OpenID Connect can now be dynamically
+  displayed depending on the ``auth_visible`` query param.
+* [#4365] Disabled scrolling maintenance mode message into view for form designers.
+* [#5962] We now support evaluation of "backend" logic rules in the SDK (new renderer only).
+  You can try ouy JsonLogic engine in the `plaground <https://open-formulieren.github.io/open-forms-sdk/?path=/docs/playground-jsonlogic--docs>`_.
+
+Bugfixes
+--------
+
+* [#5690] Fixed display of the product description in the appointments.
+* [#5884] Fixed long filenames overflowing under the progress indicator in the submission summary.
+* [#5923] Fixed "Next" button not being disabled when it should be.
+* Fixed missing translations for the AddressNL component.
+* Fixed contact details cache key in appointments not taking the language into account.
+
+Project maintenance
+-------------------
+
+* [#936] Upgraded to storybook 10 and switched storybook testing to the vitest addon.
+* Changed npm configuration, making it more secure.
+* Removed usage of types from ``crypto`` module, since it's not available in browser.
+* Switched to individual Utrecht community CSS packages.
+* Tidy up the CSS packages/imports for the NL DS components already used/distributed via
+  the renderer CSS.
+* Updated test with DST.
+* Updated dependencies to their latest versions, amongst others:
+
+  - ``@open-formulieren/formio-renderer`` to 1.5.1
+  - ``@open-formulieren/types`` to 1.0.1
+  - ``@utrecht/component-library-react`` to 13.1.0
+
 3.5.0-alpha.2 (2026-02-27)
 ==========================
 

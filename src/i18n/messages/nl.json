@@ -415,7 +415,7 @@
     "originalDefault": "Select your product(s)"
   },
   "J2bTRy": {
-    "defaultMessage": "The maximum amount of persons for this product is {maxAmount}.",
+    "defaultMessage": "Het maximale aantal personen voor dit product is {maxAmount}.",
     "description": "Amount limit exceeded error message",
     "originalDefault": "The maximum amount of persons for this product is {maxAmount}."
   },
