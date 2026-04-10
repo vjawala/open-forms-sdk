@@ -1,10 +1,8 @@
 @use 'microscope-sass/lib/bem';
 @use './card';
 
-@import '../mixins/prefix';
-
 @mixin nested($classname) {
-  .#{prefix($classname)} {
+  .openforms-#{$classname} {
     @content;
   }
 }

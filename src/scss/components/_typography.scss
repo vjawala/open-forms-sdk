@@ -4,29 +4,27 @@
 @import 'microscope-sass/lib/grid';
 @import 'microscope-sass/lib/typography';
 
-@import '../mixins/prefix';
-
-.#{prefix(title)} {
+.openforms-title {
   // This will break long words, but will respect any soft hyphens
   word-break: normal;
   overflow-wrap: anywhere;
 }
 
-.#{prefix(subtitle)} {
+.openforms-subtitle {
   @include h2(auto);
 }
 
-.#{prefix(caption)} {
+.openforms-caption {
   @include h2(auto);
 }
 
-.#{prefix('content')} {
+.openforms-content {
   @include bem.modifier('bold') {
     font-weight: 700;
   }
 }
 
-.#{prefix(body)} {
+.openforms-body {
   @include body(auto);
   clear: both;
 

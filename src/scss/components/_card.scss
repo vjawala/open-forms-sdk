@@ -3,8 +3,6 @@
 @import 'microscope-sass/lib/grid';
 @import 'microscope-sass/lib/typography';
 
-@import '../mixins/prefix';
-
 @mixin card($block: 'card') {
   background-color: var(--of-#{$block}-background-color, var(--of-color-bg));
   box-sizing: border-box;

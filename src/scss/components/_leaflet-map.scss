@@ -3,9 +3,7 @@
 @import 'leaflet-geosearch/dist/geosearch.css';
 @import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css';
 
-@import '../mixins/prefix';
-
-.#{prefix(leaflet-map)} {
+.openforms-leaflet-map {
   display: flex;
   flex-direction: column;
   gap: 12px;

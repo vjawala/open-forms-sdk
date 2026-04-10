@@ -2,9 +2,7 @@
 
 @import 'microscope-sass/lib/typography';
 
-@import '../mixins/prefix';
-
-.#{prefix(login-options)} {
+.openforms-login-options {
   @include body;
 
   @include bem.element('list') {
