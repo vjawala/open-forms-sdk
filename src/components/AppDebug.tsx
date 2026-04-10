@@ -5,7 +5,6 @@ import {useMatch} from 'react-router';
 import {useState as useGlobalState} from 'state-pool';
 
 import {sessionExpiresAt} from '@/api';
-import useFormContext from '@/hooks/useFormContext';
 import {getVersion} from '@/utils';
 
 interface DebugContextType {
@@ -72,7 +71,6 @@ const DebugInfo: React.FC<DebugInfoProps> = ({label, children}) => (
 const AppDebug: React.FC = () => {
   const {locale} = useIntl();
   const [{expiry}] = useGlobalState(sessionExpiresAt);
-  const {newRendererEnabled} = useFormContext();
   const {stepValues} = useDebugContext();
   return (
     <div className="debug-info-container" title="Debug information (only available in dev)">
@@ -105,7 +103,6 @@ const AppDebug: React.FC = () => {
         )}
       </DebugInfo>
       <DebugInfo label="SDK version">{getVersion()}</DebugInfo>
-      <DebugInfo label="New renderer enabled?">{newRendererEnabled ? 'Yes' : 'No'}</DebugInfo>
     </div>
   );
 };
