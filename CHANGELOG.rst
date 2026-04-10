@@ -50,6 +50,13 @@ Project maintenance
   - ``@open-formulieren/types`` to 1.0.1
   - ``@utrecht/component-library-react`` to 13.1.0
 
+3.3.3 (2026-04-10)
+==================
+
+Final bugfix release in the 3.3.x series.
+
+* [#5944] Fixed checkbox inputs not being clickable on iOS 18.
+
 3.5.0-alpha.2 (2026-02-27)
 ==========================
 
