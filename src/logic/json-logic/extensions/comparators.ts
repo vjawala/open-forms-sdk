@@ -1,5 +1,8 @@
 import {defaultMethods} from 'json-logic-engine';
+import type {LogicEngine} from 'json-logic-engine';
+import {isEqual} from 'lodash';
 
+import {INVALID_ARGUMENTS} from './constants';
 import type {JsonLogicEngineMethod} from './types';
 
 /**
@@ -39,18 +42,59 @@ export const customLessThanEquals: JsonLogicEngineMethod = comparatorOverrideFac
   defaultMethods['<='].method
 );
 
+function runOptimizedOrFallback(
+  logic: unknown,
+  engine: LogicEngine,
+  data: unknown,
+  above: unknown
+) {
+  if (!logic) return logic;
+  if (typeof logic !== 'object') return logic;
+
+  if (!engine.disableInterpretedOptimization && engine.optimizedMap.has(logic)) {
+    const optimized = engine.optimizedMap.get(logic);
+    if (typeof optimized === 'function') return optimized(data, above);
+    return optimized;
+  }
+
+  return engine.run(logic, data, {above});
+}
+
 export const customEquals: JsonLogicEngineMethod = comparatorOverrideFactory(
-  defaultMethods['=='].method
+  (args, context, above, engine): boolean => {
+    // While the original implementation in json-logic-engine allows for more than two arguments,
+    // the backend does not, so throw whenever it is not two.
+    if (!Array.isArray(args) || args.length !== 2) throw INVALID_ARGUMENTS;
+
+    // Backend implementation:
+    // if isinstance(a, str) or isinstance(b, str):
+    //     return str(a) == str(b)
+    // if isinstance(a, bool) or isinstance(b, bool):
+    //     return bool(a) is bool(b)
+    // return a == b
+    const a = runOptimizedOrFallback(args[0], engine!, context, above);
+    const b = runOptimizedOrFallback(args[1], engine!, context, above);
+    if (typeof a === 'string' || typeof b === 'string') {
+      return String(a) === String(b);
+    } else if (typeof a === 'boolean' || typeof b === 'boolean') {
+      return a == b;
+    }
+    return isEqual(a, b);
+  }
 );
 
 export const customStrictEquals: JsonLogicEngineMethod = comparatorOverrideFactory(
-  defaultMethods['==='].method
+  (args, context, above, engine): boolean => {
+    const a = runOptimizedOrFallback(args[0], engine!, context, above);
+    const b = runOptimizedOrFallback(args[1], engine!, context, above);
+    return isEqual(a, b);
+  }
 );
 
-export const customNotEquals: JsonLogicEngineMethod = comparatorOverrideFactory(
-  defaultMethods['!='].method
-);
+export const customNotEquals: JsonLogicEngineMethod = (args, context, above, engine) => {
+  return !customEquals(args, context, above, engine);
+};
 
-export const customNotStrictEquals: JsonLogicEngineMethod = comparatorOverrideFactory(
-  defaultMethods['!=='].method
-);
+export const customNotStrictEquals: JsonLogicEngineMethod = (args, context, above, engine) => {
+  return !customStrictEquals(args, context, above, engine);
+};
