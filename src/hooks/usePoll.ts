@@ -43,6 +43,9 @@ const usePoll = <T = unknown>(
         setState({loading: false, error: undefined, response});
         onDone(response);
       } else {
+        // reset is guaranteed to be defined by the time this callback is invoked through
+        // useTimeoutFn
+        // eslint-disable-next-line react-hooks/immutability
         reset();
       }
     } catch (err) {

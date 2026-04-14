@@ -93,10 +93,13 @@ const usePageViews = (): void => {
   // at some point, react-use/usePrevious was used which updates in a useEffect, and this
   // was changed into immediate ref-update-during render. Now, the React (18+) docs warn
   // against this, as it can produce unexpected side-effects with concurrent rendering.
-  // TODO: clean this up and avoid reading/writing mutable refs during render.
+  // TODO: clean this up and avoid reading/writing mutable refs during render, especially
+  // BEFORE we upgrade to React 19
   const previousLocationRef = useRef<Location | null>(null);
+  // eslint-disable-next-line react-hooks/refs
   const previousLocation = previousLocationRef.current;
   if (location !== previousLocation) {
+    // eslint-disable-next-line react-hooks/refs
     previousLocationRef.current = location;
   }
 

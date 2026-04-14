@@ -1,5 +1,5 @@
 import type {JSONObject} from '@open-formulieren/types';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import {FormattedDate, FormattedRelativeTime, useIntl} from 'react-intl';
 import {useMatch} from 'react-router';
 import {useState as useGlobalState} from 'state-pool';
@@ -34,14 +34,12 @@ export const DebugContextProvider: React.FC<React.PropsWithChildren> = ({childre
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
   const stepMatch = useMatch('stap/:slug');
 
-  useEffect(() => {
-    if (!stepMatch) {
-      setStepValues(null);
-      setRequiresBackendLogic(null);
-      setLogicRules(null);
-      setIsInitialLoad(true);
-    }
-  }, [stepMatch]);
+  if (!stepMatch && (stepValues !== null || requiresBackendLogic !== null || logicRules !== null)) {
+    setStepValues(null);
+    setRequiresBackendLogic(null);
+    setLogicRules(null);
+    setIsInitialLoad(true);
+  }
 
   const _setStepValues = useCallback(
     (values: JSONObject | null, isInitialLoad: boolean = false) => {

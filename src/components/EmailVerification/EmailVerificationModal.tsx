@@ -1,5 +1,5 @@
 import {Modal} from '@open-formulieren/formio-renderer';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import Body from '@/components/Body';
@@ -31,11 +31,8 @@ const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
   emailAddress,
 }) => {
   const [isVerified, setIsVerified] = useState(false);
-
-  useEffect(() => {
-    // once the modal closes, reset the internal state
-    if (!isOpen && isVerified) setIsVerified(false);
-  }, [isOpen, isVerified, setIsVerified]);
+  // once the modal closes, reset the internal state
+  if (!isOpen && isVerified) setIsVerified(false);
 
   return (
     <Modal
