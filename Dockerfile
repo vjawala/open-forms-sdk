@@ -1,7 +1,7 @@
 ARG NGINX_VERSION=1.21
 
 # Stage 1 -- install dev tools and build bundle
-FROM node:20-bookworm-slim AS build
+FROM node:24-trixie-slim AS build
 
 WORKDIR /app
 
