@@ -5,27 +5,40 @@ import {useMatch} from 'react-router';
 import {useState as useGlobalState} from 'state-pool';
 
 import {sessionExpiresAt} from '@/api';
+import type {LogicRule} from '@/data/logic';
 import {getVersion} from '@/utils';
 
 interface DebugContextType {
   stepValues: JSONObject | null;
   setStepValues: (values: JSONObject | null, isInitialLoad?: boolean) => void;
+  requiresBackendLogic: boolean | null;
+  setRequiresBackendLogic: (value: boolean | null) => void;
+  logicRules: LogicRule[] | null;
+  setLogicRules: (rules: LogicRule[] | null) => void;
 }
 
 const DebugContext = React.createContext<DebugContextType>({
   stepValues: null,
   setStepValues: () => {},
+  requiresBackendLogic: null,
+  setRequiresBackendLogic: () => {},
+  logicRules: null,
+  setLogicRules: () => {},
 });
 DebugContext.displayName = 'DebugContext';
 
 export const DebugContextProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const [stepValues, setStepValues] = useState<JSONObject | null>(null);
+  const [requiresBackendLogic, setRequiresBackendLogic] = useState<boolean | null>(null);
+  const [logicRules, setLogicRules] = useState<LogicRule[] | null>(null);
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
   const stepMatch = useMatch('stap/:slug');
 
   useEffect(() => {
     if (!stepMatch) {
       setStepValues(null);
+      setRequiresBackendLogic(null);
+      setLogicRules(null);
       setIsInitialLoad(true);
     }
   }, [stepMatch]);
@@ -42,6 +55,10 @@ export const DebugContextProvider: React.FC<React.PropsWithChildren> = ({childre
       value={{
         stepValues: isInitialLoad && !stepValues ? null : stepValues,
         setStepValues: _setStepValues,
+        requiresBackendLogic,
+        setRequiresBackendLogic,
+        logicRules,
+        setLogicRules,
       }}
     >
       {children}
@@ -71,7 +88,7 @@ const DebugInfo: React.FC<DebugInfoProps> = ({label, children}) => (
 const AppDebug: React.FC = () => {
   const {locale} = useIntl();
   const [{expiry}] = useGlobalState(sessionExpiresAt);
-  const {stepValues} = useDebugContext();
+  const {stepValues, requiresBackendLogic, logicRules} = useDebugContext();
   return (
     <div className="debug-info-container" title="Debug information (only available in dev)">
       {stepValues && (
@@ -81,6 +98,20 @@ const AppDebug: React.FC = () => {
               <code>{JSON.stringify(stepValues, null, 2)}</code>
             </pre>
           </DebugInfo>
+          <hr className="debug-info-container__spacer" />
+        </>
+      )}
+
+      {requiresBackendLogic !== null && (
+        <>
+          <DebugInfo label="Frontend logic evaluation">{String(!requiresBackendLogic)}</DebugInfo>
+          {logicRules !== null && (
+            <DebugInfo label="Logic rules">
+              <pre className="debug-info__code">
+                <code>{JSON.stringify(logicRules, null, 2)}</code>
+              </pre>
+            </DebugInfo>
+          )}
           <hr className="debug-info-container__spacer" />
         </>
       )}

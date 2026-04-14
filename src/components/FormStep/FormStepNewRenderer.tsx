@@ -43,7 +43,11 @@ const FormStepNewRenderer: React.FC = () => {
   const {state: navigationState} = useNavigation();
   const navigate = useNavigate();
   const form = useFormContext();
-  const {setStepValues: setDebugStepValues} = useDebugContext();
+  const {
+    setStepValues: setDebugStepValues,
+    setRequiresBackendLogic: setDebugRequiresBackendLogic,
+    setLogicRules: setDebugLogicRules,
+  } = useDebugContext();
   const {submission, onSubmissionObtained, onDestroySession} = useSubmissionContext();
   assertSubmission(submission);
 
@@ -63,8 +67,10 @@ const FormStepNewRenderer: React.FC = () => {
       setComponents(step.configuration.components);
       setStepSubmissionAllowed(step.canSubmit);
       setDebugStepValues(step.data, true);
+      setDebugRequiresBackendLogic(step.requireBackendLogicEvaluation);
+      setDebugLogicRules(step.logicRules);
     },
-    [setDebugStepValues]
+    [setDebugStepValues, setDebugRequiresBackendLogic, setDebugLogicRules]
   );
 
   const {formStep, submissionStep: sparseStep} = useResolveStepUrl(form, submission);
