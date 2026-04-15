@@ -56,6 +56,8 @@ const Anchor: React.FC<AnchorProps> = ({
     'utrecht-link--openforms-inherit': modifiers.includes('inherit'),
   });
   return (
+    // we don't create a component dynamically, we just look it up dynamically
+    // eslint-disable-next-line react-hooks/static-components
     <LinkComponent className={className} href={href || undefined} {...props}>
       {children}
     </LinkComponent>
